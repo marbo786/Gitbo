@@ -380,3 +380,51 @@ pre { padding: 16px; margin: 0; overflow-x: auto; font-family: 'JetBrains Mono',
     .sidebar-expandable:hover { width: 280px; }
     .hero-stats { display: none; }
 }
+
+/* ── Animations ── */
+@keyframes float {
+    0% { transform: translateY(0px); }
+    50% { transform: translateY(-15px); }
+    100% { transform: translateY(0px); }
+}
+
+@keyframes pulseGlow {
+    0% { opacity: 0.2; transform: scale(1); }
+    50% { opacity: 0.4; transform: scale(1.1); }
+    100% { opacity: 0.2; transform: scale(1); }
+}
+
+@keyframes fadeUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Floating 3D Asset */
+.hero-image {
+    animation: float 6s ease-in-out infinite;
+}
+
+/* Pulsing Neon Glow */
+.hero-glow {
+    animation: pulseGlow 4s ease-in-out infinite;
+}
+
+/* Dashboard Panel Load Cascade */
+.dashboard-panel {
+    opacity: 0;
+    animation: fadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+}
+
+.hero-card { animation-delay: 0.1s; }
+#card-issue-analysis { animation-delay: 0.2s; }
+#card-relevant-code { animation-delay: 0.3s; }
+#card-implementation { animation-delay: 0.4s; }
+#card-git-diff { animation-delay: 0.5s; }
+
+/* Panel Interactive Hover Lift */
+.dashboard-panel:not(.hero-card):hover {
+    transform: translateY(-4px);
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.4);
+    border-color: rgba(255, 94, 26, 0.3);
+}
