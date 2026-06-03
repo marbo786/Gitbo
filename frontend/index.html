@@ -13,8 +13,8 @@
 </head>
 <body>
     <div class="app-container">
-        <!-- Sidebar Panel (Left, 30% Width) -->
-        <aside class="sidebar glass">
+        <!-- Sidebar Panel (Left) -->
+        <aside class="sidebar glass-panel">
             <div class="brand">
                 <svg class="logo-icon logo-svg" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                     <path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/>
@@ -74,10 +74,10 @@
             </div>
         </aside>
 
-        <!-- Main Content Workspace Panel (Right, 70% Width) -->
+        <!-- Main Content Workspace Panel (Right) -->
         <main class="main-content">
             <!-- Status/Success Banner -->
-            <div id="pr-banner" class="pr-success-banner glass hidden">
+            <div id="pr-banner" class="pr-success-banner glass-panel hidden">
                 <div class="banner-content">
                     <div class="banner-text-block">
                         <span class="celebrate-badge">🎉 PR Successfully Opened!</span>
@@ -89,17 +89,17 @@
             </div>
 
             <!-- Error Banner -->
-            <div id="error-banner" class="error-banner glass hidden">
+            <div id="error-banner" class="error-banner glass-panel hidden">
                 <div class="banner-content">
                     <span class="error-badge">⚠️ Pipeline Warning/Error</span>
                     <ul id="error-list"></ul>
                 </div>
             </div>
 
-            <!-- Dashboard Grid -->
+            <!-- Dashboard Grid (Bento Box) -->
             <div class="dashboard-grid">
                 <!-- Card 1: Issue Analysis -->
-                <section class="card glass" id="card-issue-analysis">
+                <section class="bento-card glass-panel" id="card-issue-analysis">
                     <div class="card-header">
                         <svg class="card-svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                             <path d="M12 20h9"/>
@@ -133,7 +133,7 @@
                 </section>
 
                 <!-- Card 2: Relevant Code Files -->
-                <section class="card glass" id="card-relevant-code">
+                <section class="bento-card glass-panel" id="card-relevant-code">
                     <div class="card-header">
                         <svg class="card-svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                             <path d="m18 16 4-4-4-4"/>
@@ -149,7 +149,7 @@
                 </section>
 
                 <!-- Card 3: Implementation Strategy -->
-                <section class="card glass" id="card-implementation">
+                <section class="bento-card glass-panel" id="card-implementation">
                     <div class="card-header">
                         <svg class="card-svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                             <path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96-.44 2.5 2.5 0 0 1 0-3.12 3.01 3.01 0 0 1 0-3.88 2.5 2.5 0 0 1 0-3.12A2.5 2.5 0 0 1 9.5 2Z"/>
@@ -177,7 +177,7 @@
                 </section>
 
                 <!-- Card 4: Live Git Diff -->
-                <section class="card glass full-width" id="card-git-diff">
+                <section class="bento-card glass-panel full-width" id="card-git-diff">
                     <div class="card-header">
                         <svg class="card-svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                             <rect width="20" height="16" x="2" y="4" rx="2"/>

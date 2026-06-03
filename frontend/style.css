@@ -1,793 +1,560 @@
-/* ═══════════════════════════════════════════════════════════
-   Gitbo — Premium Dark Glassmorphism Design System
-   ═══════════════════════════════════════════════════════════ */
+/* ── Gitbo Deep Purple Cyber Aesthetic ── */
+
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap');
 
 :root {
-    --bg-dark:              #09090b;
-    --surface-glass:        rgba(18, 18, 24, 0.45);
-    --surface-input:        rgba(10, 10, 12, 0.70);
-    --border-glass:         rgba(255, 255, 255, 0.06);
-    --border-glass-hover:   rgba(255, 255, 255, 0.15);
-
-    --accent-indigo:        #6366f1;
-    --accent-purple:        #8b5cf6;
-    --accent-indigo-glow:   rgba(99, 102, 241, 0.25);
-
-    --success-green:        #10b981;
-    --success-green-bg:     rgba(16, 185, 129, 0.08);
-    --success-green-border: rgba(16, 185, 129, 0.20);
-
-    --danger-red:           #ef4444;
-    --danger-red-border:    rgba(239, 68, 68, 0.20);
-
-    --text-primary:   #f8fafc;
-    --text-secondary: #cbd5e1;
-    --text-muted:     #64748b;
-
-    --font-sans: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
-
-    --ease: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    /* Colors */
+    --bg-base: #06020a;
+    --text-primary: #ffffff;
+    --text-secondary: rgba(255, 255, 255, 0.6);
+    --neon-purple: #c75cff;
+    --neon-purple-dim: rgba(199, 92, 255, 0.2);
+    --accent-blue: #3d8bff;
+    
+    /* Glassmorphism */
+    --glass-bg: rgba(20, 10, 30, 0.4);
+    --glass-border: rgba(255, 255, 255, 0.08);
+    --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.6);
+    
+    /* Layout */
+    --radius-lg: 24px;
+    --radius-md: 16px;
+    --radius-sm: 8px;
+    --spacing-xl: 32px;
+    --spacing-lg: 24px;
+    --spacing-md: 16px;
+    --spacing-sm: 8px;
+    
+    /* Transitions */
+    --trans-fast: 0.2s ease;
+    --trans-smooth: 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-/* ── Reset ───────────────────────────────────────────────── */
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
 
 body {
-    background-color: var(--bg-dark);
+    font-family: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
+    background-color: var(--bg-base);
     color: var(--text-primary);
-    font-family: var(--font-sans);
-    line-height: 1.5;
     min-height: 100vh;
-    display: flex;
-    /* Hide any accidental horizontal bleed at the body level */
     overflow-x: hidden;
-    background-image:
-        radial-gradient(circle at 5% 15%,  rgba(99,102,241,0.08) 0%, transparent 45%),
-        radial-gradient(circle at 95% 85%, rgba(139,92,246,0.08) 0%, transparent 45%);
+    /* The Cyber Bust Background */
+    background-image: url('assets/bg.png');
+    background-size: cover;
+    background-position: center right;
+    background-attachment: fixed;
+    background-repeat: no-repeat;
 }
 
-/* ── Scrollbars ──────────────────────────────────────────── */
-::-webkit-scrollbar              { width: 6px; height: 6px; }
-::-webkit-scrollbar-track        { background: transparent; }
-::-webkit-scrollbar-thumb        { background: rgba(255,255,255,0.10); border-radius: 50px; }
-::-webkit-scrollbar-thumb:hover  { background: rgba(255,255,255,0.25); }
-
-/* ── Glassmorphism utility ───────────────────────────────── */
-.glass {
-    background: var(--surface-glass);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border: 1px solid var(--border-glass);
-    box-shadow: 0 20px 50px rgba(0,0,0,0.45);
+/* Add a dark overlay to ensure readability while keeping the 3D asset visible */
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle at left, rgba(6, 2, 10, 0.95) 0%, rgba(6, 2, 10, 0.6) 50%, rgba(6, 2, 10, 0.2) 100%);
+    z-index: -1;
 }
-
-/* ════════════════════════════════════════════════════════════
-   LAYOUT  —  sidebar + main panel
-   ════════════════════════════════════════════════════════════ */
 
 .app-container {
     display: flex;
-    width: 100%;
+    flex-direction: row;
+    gap: var(--spacing-xl);
+    padding: var(--spacing-xl);
+    max-width: 1600px;
+    margin: 0 auto;
     min-height: 100vh;
 }
 
-/* ── Sidebar ─────────────────────────────────────────────── */
+/* ── Typography ── */
+h1, h2, h3 {
+    font-weight: 600;
+    letter-spacing: -0.02em;
+}
+
+/* ── Glassmorphism Utility ── */
+.glass-panel {
+    background: var(--glass-bg);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--glass-shadow);
+    transition: transform var(--trans-smooth), box-shadow var(--trans-smooth), border-color var(--trans-smooth);
+}
+
+/* ── Sidebar (Left) ── */
 .sidebar {
-    /*
-     * flex-shrink:0  → sidebar NEVER compresses to make room for main
-     * sticky + height:100vh → stays in place while main scrolls
-     */
-    flex-shrink: 0;
-    width: 320px;
-    padding: 3rem 2rem;
+    flex: 0 0 380px;
     display: flex;
     flex-direction: column;
-    gap: 2.5rem;
-    border-right: 1px solid var(--border-glass);
-    height: 100vh;
+    gap: var(--spacing-lg);
+    padding: var(--spacing-lg);
+    height: calc(100vh - 64px);
     position: sticky;
-    top: 0;
+    top: var(--spacing-xl);
     overflow-y: auto;
 }
 
-/* ── Main content ────────────────────────────────────────── */
-.main-content {
-    /*
-     * flex:1        → fill all remaining horizontal space
-     * min-width:0   → allow it to shrink below its content's min-width
-     *                 (without this, wide <pre> blocks push it past the viewport)
-     * overflow-y:auto → scroll vertically when results exceed 100vh
-     * overflow-x:hidden → absolutely no horizontal bleed
-     */
-    flex: 1;
-    min-width: 0;
-    overflow-y: auto;
-    overflow-x: hidden;
-    height: 100vh;
-    padding: 2.5rem;
+/* Hide scrollbar for sidebar */
+.sidebar::-webkit-scrollbar { display: none; }
+.sidebar { -ms-overflow-style: none; scrollbar-width: none; }
+
+.brand {
     display: flex;
-    flex-direction: column;
-    gap: 2rem;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: var(--spacing-sm);
 }
-
-/* ════════════════════════════════════════════════════════════
-   BRAND / SIDEBAR INTERNALS
-   ════════════════════════════════════════════════════════════ */
-
-.brand { display: flex; align-items: center; gap: 1.25rem; }
 
 .logo-icon {
-    font-size: 2.25rem;
-    flex-shrink: 0;
-    background: linear-gradient(135deg, #a5b4fc 0%, var(--accent-indigo) 50%, var(--accent-purple) 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    filter: drop-shadow(0 0 15px rgba(99,102,241,0.5));
-    animation: float 4s ease-in-out infinite alternate;
-}
-
-@keyframes float {
-    from { transform: translateY(0px) rotate(0deg); }
-    to   { transform: translateY(-4px) rotate(5deg); }
+    color: var(--neon-purple);
+    filter: drop-shadow(0 0 8px var(--neon-purple-dim));
 }
 
 .brand-text h1 {
-    font-size: 1.65rem;
-    font-weight: 800;
-    letter-spacing: -0.03em;
-    background: linear-gradient(to right, #fff, #cbd5e1);
+    font-size: 1.5rem;
+    font-weight: 700;
+    background: linear-gradient(135deg, #fff 0%, #a0a0a0 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
 }
 
 .brand-text .subtitle {
-    font-size: 0.75rem;
-    color: var(--text-muted);
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.15em;
-    margin-top: 0.1rem;
-}
-
-/* ── Form ────────────────────────────────────────────────── */
-#analyze-form { display: flex; flex-direction: column; gap: 1.75rem; }
-
-.form-group { display: flex; flex-direction: column; gap: 0.6rem; }
-
-.form-group label {
     font-size: 0.85rem;
-    font-weight: 600;
-    color: var(--text-secondary);
-    letter-spacing: 0.03em;
+    color: var(--neon-purple);
     text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-weight: 600;
 }
 
-.form-group input,
-.form-group textarea {
-    width: 100%;
-    background: var(--surface-input);
-    border: 1px solid var(--border-glass);
-    border-radius: 10px;
+/* ── Forms ── */
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: var(--spacing-lg);
+}
+
+label {
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--text-secondary);
+}
+
+input, textarea {
+    background: rgba(0, 0, 0, 0.4);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-md);
+    padding: 14px 16px;
     color: var(--text-primary);
-    padding: 0.9rem 1.1rem;
-    font-family: var(--font-sans);
+    font-family: inherit;
     font-size: 0.95rem;
-    transition: var(--ease);
+    transition: var(--trans-fast);
 }
 
-.form-group input:focus,
-.form-group textarea:focus {
+input:focus, textarea:focus {
     outline: none;
-    border-color: var(--accent-indigo);
-    background: rgba(18,18,22,0.95);
-    box-shadow: 0 0 0 4px var(--accent-indigo-glow);
+    border-color: var(--neon-purple);
+    box-shadow: 0 0 0 2px var(--neon-purple-dim);
+    background: rgba(0, 0, 0, 0.6);
 }
 
-.form-group textarea { height: 180px; resize: none; line-height: 1.6; font-size: 0.9rem; }
+textarea {
+    resize: vertical;
+    min-height: 120px;
+}
 
-.form-group .tip { font-size: 0.75rem; color: var(--text-muted); line-height: 1.4; }
+.tip {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+}
 
-/* ── Buttons ─────────────────────────────────────────────── */
 .btn {
-    display: inline-flex;
+    padding: 14px 24px;
+    border-radius: var(--radius-md);
+    border: none;
+    font-family: inherit;
+    font-weight: 600;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: var(--trans-smooth);
+    display: flex;
     align-items: center;
     justify-content: center;
-    padding: 0.85rem 1.5rem;
-    border-radius: 10px;
-    font-weight: 700;
-    font-size: 0.9rem;
-    cursor: pointer;
-    transition: var(--ease);
-    border: none;
-    text-decoration: none;
-    letter-spacing: 0.02em;
-    white-space: nowrap;   /* never wrap button text */
+    gap: 8px;
 }
 
 .btn-primary {
-    width: 100%;
-    background: linear-gradient(135deg, var(--accent-indigo) 0%, var(--accent-purple) 100%);
-    color: #fff;
-    box-shadow: 0 4px 20px rgba(99,102,241,0.35);
+    background: linear-gradient(135deg, var(--neon-purple) 0%, var(--accent-blue) 100%);
+    color: white;
+    box-shadow: 0 4px 20px rgba(199, 92, 255, 0.3);
 }
-.btn-primary:hover  { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(99,102,241,0.5); filter: brightness(1.1); }
-.btn-primary:active { transform: translateY(0); }
-.btn-primary:disabled { opacity: 0.6; pointer-events: none; }
 
-.btn-success {
-    background: var(--success-green);
-    color: #fff;
-    box-shadow: 0 4px 15px rgba(16,185,129,0.3);
-    flex-shrink: 0;   /* never squish the PR link button */
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(199, 92, 255, 0.5);
+    filter: brightness(1.1);
 }
-.btn-success:hover { background: #059669; transform: translateY(-2px); box-shadow: 0 8px 25px rgba(16,185,129,0.45); }
 
-.btn-loader { display: flex; align-items: center; gap: 0.75rem; }
-
-.spinner {
-    width: 20px; height: 20px;
-    border: 3px solid rgba(255,255,255,0.2);
-    border-radius: 50%;
-    border-top-color: #fff;
-    animation: spin 0.8s linear infinite;
-    flex-shrink: 0;
+.btn-primary:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
 }
-@keyframes spin { to { transform: rotate(360deg); } }
 
-.hidden { display: none !important; }
-
-/* ── Pipeline stepper ────────────────────────────────────── */
-.pipeline-status { border-top: 1px solid var(--border-glass); padding-top: 2rem; margin-top: auto; }
+/* ── Pipeline Steps ── */
+.pipeline-status {
+    margin-top: auto;
+    padding-top: var(--spacing-xl);
+    border-top: 1px solid var(--glass-border);
+}
 
 .pipeline-status h3 {
-    font-size: 0.8rem;
+    font-size: 0.9rem;
     text-transform: uppercase;
-    letter-spacing: 0.1em;
-    color: var(--text-muted);
-    margin-bottom: 1.25rem;
-    font-weight: 700;
+    letter-spacing: 0.05em;
+    color: var(--text-secondary);
+    margin-bottom: var(--spacing-md);
 }
 
-.steps-progress { list-style: none; display: flex; flex-direction: column; gap: 1.15rem; }
+.steps-progress {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
 
-.step { display: flex; align-items: center; gap: 1rem; opacity: 0.45; transition: var(--ease); }
-.step.active    { opacity: 1; color: var(--accent-indigo); font-weight: 600; }
-.step.completed { opacity: 0.9; color: var(--success-green); }
+.step {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    opacity: 0.5;
+    transition: var(--trans-smooth);
+}
+
+.step.active {
+    opacity: 1;
+}
+
+.step.completed {
+    opacity: 0.8;
+}
 
 .step-dot {
-    width: 12px; height: 12px;
-    flex-shrink: 0;
+    width: 12px;
+    height: 12px;
     border-radius: 50%;
-    background: var(--text-muted);
-    transition: var(--ease);
-}
-.step.active .step-dot    { background: var(--accent-indigo); box-shadow: 0 0 15px var(--accent-indigo); animation: pulse-dot 1.5s infinite alternate; }
-.step.completed .step-dot { background: var(--success-green); box-shadow: 0 0 12px var(--success-green); }
-
-@keyframes pulse-dot {
-    from { transform: scale(1);    opacity: 0.5; }
-    to   { transform: scale(1.35); opacity: 1;   }
-}
-
-/* ════════════════════════════════════════════════════════════
-   BANNERS
-   ════════════════════════════════════════════════════════════ */
-
-/* ── PR Success Banner ───────────────────────────────────── */
-.pr-success-banner {
+    background: var(--glass-border);
     position: relative;
-    border-radius: 16px;
-    padding: 1.75rem 2rem;
-    border: 1px solid var(--success-green-border);
-    background: linear-gradient(135deg, rgba(16,185,129,0.05) 0%, rgba(9,9,11,0.4) 100%);
-    overflow: hidden;              /* clips the decorative glow blob */
-    animation: slideDown 0.6s cubic-bezier(0.16,1,0.3,1);
-    flex-shrink: 0;
+    transition: var(--trans-smooth);
 }
 
-@keyframes slideDown {
-    from { transform: translateY(-30px); opacity: 0; }
-    to   { transform: translateY(0);     opacity: 1; }
+.step.active .step-dot {
+    background: var(--neon-purple);
+    box-shadow: 0 0 12px var(--neon-purple);
 }
 
-/*
- * banner-content is a flex row:
- *   [text block (shrinkable)]   [button (fixed width, never shrinks)]
- *
- * The key rules:
- *   - NO overflow:hidden here (that was clipping the button in some viewports)
- *   - NO justify-content:space-between (let gap + flex-grow do the work)
- *   - .banner-text-block gets flex:1 + min-width:0 so it shrinks/wraps
- *   - .btn-success gets flex-shrink:0 so it never gets squished
- */
-.banner-content {
-    position: relative;
-    z-index: 2;
+.step.completed .step-dot {
+    background: var(--accent-blue);
+}
+
+/* ── Main Content Workspace (Right) ── */
+.main-content {
+    flex: 1;
     display: flex;
-    flex-direction: row;
-    align-items: center;
-    gap: 1.5rem;
+    flex-direction: column;
+    gap: var(--spacing-xl);
     min-width: 0;
 }
 
-.banner-text-block {
-    flex: 1;
-    min-width: 0;           /* let it shrink so the button always fits */
+/* ── Bento Grid Layout ── */
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--spacing-lg);
+    align-items: start;
+}
+
+.bento-card {
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
+    padding: var(--spacing-lg);
+    height: 100%;
 }
 
-.celebrate-badge {
-    background: var(--success-green-bg);
-    color: var(--success-green);
-    border: 1px solid var(--success-green-border);
-    padding: 0.35rem 0.9rem;
-    border-radius: 50px;
-    font-size: 0.78rem;
-    font-weight: 800;
-    letter-spacing: 0.05em;
-    display: inline-block;
-    box-shadow: 0 0 20px rgba(16,185,129,0.15);
-    /* badge stays on its own line, doesn't need full width */
-    align-self: flex-start;
+.bento-card:hover {
+    border-color: rgba(255, 255, 255, 0.15);
 }
 
-.banner-content h2 {
-    font-size: 1.25rem;
-    font-weight: 800;
-    color: #fff;
-    letter-spacing: -0.02em;
-    /* wrap long title text, never push outside the flex container */
-    overflow-wrap: break-word;
-    word-break: break-word;
+.full-width {
+    grid-column: 1 / -1;
+}
+
+.card-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: var(--spacing-md);
+}
+
+.card-svg {
+    color: var(--neon-purple);
+}
+
+.card-header h2 {
+    font-size: 1.1rem;
+    font-weight: 500;
+}
+
+.placeholder-text {
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+    line-height: 1.5;
+}
+
+/* ── Specific Card Content ── */
+/* Issue Analysis */
+.metric-row {
+    display: flex;
+    gap: var(--spacing-md);
+    margin-bottom: var(--spacing-md);
+}
+
+.metric {
+    background: rgba(0,0,0,0.3);
+    padding: 12px 16px;
+    border-radius: var(--radius-md);
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    border: 1px solid var(--glass-border);
+}
+
+.metric-label {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+}
+
+.metric-value {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--neon-purple);
+}
+
+.problem-summary h3, .skills-tags h3, .architect-section h3 {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    margin-bottom: 8px;
+    margin-top: 16px;
+}
+
+.tags-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.skill-tag {
+    background: rgba(199, 92, 255, 0.1);
+    border: 1px solid var(--neon-purple-dim);
+    color: var(--text-primary);
+    padding: 4px 10px;
+    border-radius: 100px;
+    font-size: 0.85rem;
+}
+
+/* Code Snippets */
+.code-snippets-container {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+}
+
+.code-snippet {
+    background: rgba(0,0,0,0.5);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+}
+
+.snippet-file {
+    background: rgba(255,255,255,0.03);
+    padding: 8px 16px;
+    font-size: 0.85rem;
+    font-family: 'JetBrains Mono', monospace;
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--glass-border);
+    color: var(--accent-blue);
+}
+
+.snippet-lines {
+    color: var(--text-secondary);
+}
+
+pre {
+    padding: 16px;
+    margin: 0;
+    overflow-x: auto;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.85rem;
+    line-height: 1.5;
+    color: #e0e0e0;
+}
+
+/* Implementation Strategy */
+.plan-block {
+    background: rgba(0,0,0,0.3);
+    padding: 16px;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--glass-border);
+    font-size: 0.95rem;
+    line-height: 1.6;
+}
+
+/* Terminal (Git Diff) */
+.terminal-container {
+    background: #000;
+    border-radius: var(--radius-md);
+    border: 1px solid #333;
+    overflow: hidden;
+    margin-top: var(--spacing-md);
+}
+
+.terminal-header {
+    background: #111;
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border-bottom: 1px solid #333;
+}
+
+.terminal-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+}
+.red { background: #ff5f56; }
+.yellow { background: #ffbd2e; }
+.green { background: #27c93f; }
+
+.terminal-title {
+    margin-left: 8px;
+    font-size: 0.85rem;
+    color: #888;
+    font-family: 'JetBrains Mono', monospace;
+}
+
+.terminal-body {
+    background: #000;
+    padding: 16px;
+    max-height: 500px;
+    overflow-y: auto;
+}
+
+/* ── Banners ── */
+.banner-content {
+    padding: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--spacing-md);
+}
+
+.pr-success-banner {
+    border-color: rgba(39, 201, 63, 0.3);
+    position: relative;
+    overflow: hidden;
 }
 
 .banner-glow {
     position: absolute;
-    inset: 0;
-    background: radial-gradient(circle at 90% 50%, rgba(16,185,129,0.12) 0%, transparent 60%);
+    top: 0; right: 0; bottom: 0; left: 0;
+    background: radial-gradient(circle at right, rgba(39, 201, 63, 0.15) 0%, transparent 70%);
     pointer-events: none;
-    z-index: 1;
 }
 
-/* ── Error Banner ────────────────────────────────────────── */
+.celebrate-badge {
+    color: #27c93f;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-weight: 600;
+    display: block;
+    margin-bottom: 4px;
+}
+
+.btn-success {
+    background: #27c93f;
+    color: #000;
+    text-decoration: none;
+    padding: 12px 24px;
+    border-radius: var(--radius-md);
+    font-weight: 600;
+    transition: var(--trans-smooth);
+}
+.btn-success:hover {
+    background: #2ee649;
+    box-shadow: 0 4px 20px rgba(39, 201, 63, 0.4);
+}
+
 .error-banner {
-    border-radius: 16px;
-    padding: 1.5rem 2rem;
-    border: 1px solid var(--danger-red-border);
-    background: linear-gradient(135deg, rgba(239,68,68,0.04) 0%, rgba(9,9,11,0.4) 100%);
-    flex-shrink: 0;
+    border-color: rgba(255, 95, 86, 0.3);
 }
 
 .error-badge {
-    color: var(--danger-red);
-    font-weight: 800;
-    font-size: 0.95rem;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    display: block;
-    margin-bottom: 0.75rem;
-}
-
-#error-list {
-    list-style: square;
-    padding-left: 1.5rem;
-    color: #fecaca;
-    font-size: 0.9rem;
-    line-height: 1.6;
-    overflow-wrap: break-word;
-}
-
-/* ════════════════════════════════════════════════════════════
-   DASHBOARD GRID + CARDS
-   ════════════════════════════════════════════════════════════ */
-
-/*
- * Two equal columns.
- * minmax(0, 1fr) is CRITICAL — the default minimum for a grid column
- * is min-content, meaning a wide <pre> block could force the column
- * wider than 50%, collapsing the adjacent column to zero.
- * minmax(0, 1fr) overrides this and enforces hard equal sizing.
- */
-.dashboard-grid {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 1.5rem;
-    align-items: start;
-}
-
-.card {
-    border-radius: 16px;
-    padding: 1.75rem;
-    display: flex;
-    flex-direction: column;
-    gap: 1.25rem;
-    transition: var(--ease);
-    /*
-     * min-width:0 — flex/grid items default to min-width:auto.
-     * Without this override, the card's min-content width
-     * (driven by its widest child) leaks into the grid column,
-     * breaking the minmax(0,1fr) constraint.
-     */
-    min-width: 0;
-    /*
-     * overflow:hidden — final safety net. Any child that somehow
-     * still bleeds beyond the card's border-box gets clipped here.
-     */
-    overflow: hidden;
-}
-
-.card:hover {
-    border-color: var(--border-glass-hover);
-    transform: translateY(-2px);
-    box-shadow: 0 25px 60px rgba(0,0,0,0.55);
-}
-
-.card.full-width { grid-column: span 2; }
-
-/* ── Card Header ─────────────────────────────────────────── */
-.card-header {
-    display: flex;
-    align-items: center;
-    gap: 0.9rem;
-    border-bottom: 1px solid var(--border-glass);
-    padding-bottom: 1rem;
-    min-width: 0;
-}
-
-.card-svg { flex-shrink: 0; color: var(--accent-indigo); }
-
-.card-header h2 {
-    font-size: 1.1rem;
-    font-weight: 800;
-    color: var(--text-primary);
-    letter-spacing: -0.01em;
-    /* truncate extremely long heading text */
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    min-width: 0;
-}
-
-/* ── Card Body ───────────────────────────────────────────── */
-/*
- * The card body is the direct container of all card content.
- * min-width:0 is repeated here because the body is a flex child
- * (card is flex-direction:column) and needs its own override.
- */
-.card-body {
-    flex: 1;
-    min-width: 0;
-    overflow: hidden;
-}
-
-.card-body.no-padding { padding: 0; }
-
-/* ── Placeholder text ────────────────────────────────────── */
-.placeholder-text {
-    color: var(--text-muted);
-    font-style: italic;
-    font-size: 0.9rem;
-    text-align: center;
-    padding: 2.5rem 1rem;
-    line-height: 1.5;
-}
-.placeholder-text.padded { padding: 4rem 1rem; }
-
-/* ════════════════════════════════════════════════════════════
-   CARD 1 — Issue Analysis
-   ════════════════════════════════════════════════════════════ */
-
-.analysis-results {
-    display: flex;
-    flex-direction: column;
-    gap: 1.25rem;
-    min-width: 0;
-}
-
-.metric-row { display: flex; gap: 2rem; flex-wrap: wrap; }
-.metric     { display: flex; flex-direction: column; gap: 0.35rem; }
-
-.metric-label {
-    font-size: 0.72rem;
-    color: var(--text-muted);
-    text-transform: uppercase;
-    font-weight: 700;
-    letter-spacing: 0.05em;
-}
-
-.badge {
-    padding: 0.3rem 0.9rem;
-    border-radius: 50px;
-    font-size: 0.82rem;
-    font-weight: 800;
-    letter-spacing: 0.02em;
-    display: inline-block;
-}
-
-.badge-accent {
-    background: var(--accent-indigo-glow);
-    color: #cbd5e1;
-    border: 1px solid rgba(99,102,241,0.4);
-    box-shadow: 0 4px 10px rgba(99,102,241,0.1);
-}
-
-.problem-summary h3,
-.skills-tags h3,
-.architect-section h3 {
-    font-size: 0.75rem;
-    text-transform: uppercase;
-    color: var(--text-secondary);
-    margin-bottom: 0.6rem;
-    font-weight: 700;
-    letter-spacing: 0.05em;
-}
-
-.problem-summary,
-.skills-tags { min-width: 0; }
-
-.problem-summary p {
-    font-size: 0.9rem;
-    line-height: 1.6;
-    color: var(--text-secondary);
-    background: rgba(0,0,0,0.35);
-    padding: 1rem;
-    border-radius: 10px;
-    border: 1px solid rgba(255,255,255,0.02);
-    overflow-wrap: break-word;
-    word-break: break-word;
-}
-
-.tags-container { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.5rem; }
-
-.tag {
-    background: rgba(255,255,255,0.04);
-    border: 1px solid var(--border-glass);
-    color: var(--text-secondary);
-    padding: 0.25rem 0.75rem;
-    border-radius: 6px;
-    font-size: 0.78rem;
-    font-weight: 700;
-    transition: var(--ease);
-    white-space: nowrap;
-}
-.tag:hover { background: rgba(255,255,255,0.08); border-color: var(--text-muted); }
-
-/* ════════════════════════════════════════════════════════════
-   CARD 2 — Relevant Code Snippets
-   ════════════════════════════════════════════════════════════ */
-
-/*
- * The container scrolls vertically (bounded at 460px) and never
- * expands horizontally — overflow-x:hidden stops any snippet from
- * pushing the card column wider.
- */
-.code-snippets-container {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-    max-height: 460px;
-    overflow-y: auto;
-    overflow-x: hidden;
-    padding-right: 4px;     /* thin gap so scrollbar doesn't overlap content */
-    min-width: 0;
-}
-
-/*
- * Each snippet box clips its children via overflow:hidden.
- * This is important: the <pre> inside uses overflow-x:auto for
- * its OWN horizontal scrollbar, contained INSIDE the snippet box.
- */
-.code-snippet {
-    border-radius: 10px;
-    border: 1px solid var(--border-glass);
-    overflow: hidden;       /* clip the pre at the snippet boundary */
-    transition: var(--ease);
-    min-width: 0;
-    background: rgba(8, 8, 11, 0.85);
-}
-.code-snippet:hover { border-color: var(--border-glass-hover); }
-
-/* File path bar */
-.snippet-file {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 0.5rem;
-    padding: 0.55rem 0.9rem;
-    background: rgba(255,255,255,0.02);
-    border-bottom: 1px solid var(--border-glass);
-    font-family: var(--font-mono);
-    font-size: 0.75rem;
-    font-weight: 500;
-    color: var(--text-secondary);
-    min-width: 0;
-}
-
-/* file path truncates with ellipsis if too long */
-.snippet-file > span:first-child {
-    flex: 1;
-    min-width: 0;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-}
-
-.snippet-lines {
-    flex-shrink: 0;
-    color: var(--text-muted);
-    font-size: 0.7rem;
-    white-space: nowrap;
-}
-
-/*
- * The <pre> is where long code lines live.
- *
- * overflow-x:auto  → horizontal scrollbar appears INSIDE this element
- *                    so long lines never push the snippet (or card) wider
- * min-width:0      → pre itself doesn't escape its snippet container
- * white-space:pre  → preserve code indentation/newlines faithfully
- * min-height       → code area is always visibly tall even for short snippets
- */
-.code-snippet pre {
-    display: block;
-    margin: 0;
-    padding: 0.9rem 1rem;
-    min-width: 0;
-    width: 100%;
-    overflow-x: auto;
-    overflow-y: hidden;
-    white-space: pre;
-    min-height: 4rem;       /* visible area even for 1-line snippets */
-    background: rgba(4, 4, 7, 0.92);
-}
-
-/*
- * display:block is CRITICAL.
- * Default inline <code> inside a constrained <pre> doesn't
- * compute its own height properly, causing the pre to collapse.
- * width:max-content lets the code be as wide as it needs;
- * the parent <pre> scrolls it horizontally.
- */
-.code-snippet code {
-    display: block;
-    width: max-content;
-    font-family: var(--font-mono);
-    font-size: 0.8rem;
-    line-height: 1.65;
-    color: #e2e8f0;
-}
-
-/* ════════════════════════════════════════════════════════════
-   CARD 3 — Implementation Strategy
-   ════════════════════════════════════════════════════════════ */
-
-.implementation-results {
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
-    min-width: 0;
-    max-height: 460px;
-    overflow-y: auto;
-    overflow-x: hidden;
-    padding-right: 4px;
-}
-
-.architect-section { min-width: 0; }
-
-/*
- * white-space:pre-wrap → renders newlines and leading spaces from
- *   the LLM response while still word-wrapping at the container edge.
- * overflow-wrap:break-word → very long words (URLs, identifiers) wrap
- *   instead of escaping the box.
- * overflow:hidden → belt-and-suspenders clip on any residual bleed.
- */
-.plan-block {
-    font-size: 0.88rem;
-    line-height: 1.75;
-    color: var(--text-secondary);
-    background: rgba(8, 8, 11, 0.85);
-    border: 1px solid var(--border-glass);
-    padding: 1rem 1.1rem;
-    border-radius: 10px;
-    white-space: pre-wrap;
-    overflow-wrap: break-word;
-    word-break: break-word;
-    min-width: 0;
-    overflow: hidden;
-}
-
-/* ════════════════════════════════════════════════════════════
-   CARD 4 — Live Git Diff (terminal)
-   ════════════════════════════════════════════════════════════ */
-
-.terminal-container {
-    border-radius: 10px;
-    border: 1px solid #1c1c24;
-    overflow: hidden;
-    box-shadow: 0 15px 40px rgba(0,0,0,0.6);
-    min-width: 0;
-    background: #050508;
-}
-
-.terminal-header {
-    display: flex;
-    align-items: center;
-    padding: 0.7rem 1.1rem;
-    background: #121218;
-    border-bottom: 1px solid #1c1c24;
-    flex-shrink: 0;
-}
-
-.terminal-dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; margin-right: 6px; flex-shrink: 0; }
-.terminal-dot.red    { background: #ef4444; }
-.terminal-dot.yellow { background: #fbbf24; }
-.terminal-dot.green  { background: #10b981; }
-
-.terminal-title {
-    color: var(--text-muted);
-    font-family: var(--font-mono);
-    font-size: 0.72rem;
-    margin-left: 0.6rem;
+    color: #ff5f56;
     font-weight: 600;
-}
-
-/*
- * The terminal <pre> — same pattern as code-snippet pre:
- * overflow-x:auto for long diff lines (inside the terminal box),
- * overflow-y:auto for tall diffs.
- */
-.terminal-body {
+    margin-bottom: 8px;
     display: block;
-    margin: 0;
-    padding: 1.25rem;
-    max-height: 520px;
-    overflow-x: auto;
-    overflow-y: auto;
-    background: #020204;
-    min-width: 0;
-    white-space: pre;
 }
 
-.terminal-body code {
-    display: block;
-    width: max-content;
-    font-family: var(--font-mono);
-    font-size: 0.8rem;
-    line-height: 1.7;
-    white-space: inherit;
+.error-banner ul {
+    margin-left: 20px;
+    color: #ffb3b0;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.9rem;
 }
 
-/* ── Diff colours ────────────────────────────────────────── */
-.diff-added   { color: #34d399; background: rgba(16,185,129,0.10); display: block; padding: 0 0.5rem; border-left: 3px solid #10b981; }
-.diff-removed { color: #f87171; background: rgba(239,68,68,0.10);  display: block; padding: 0 0.5rem; border-left: 3px solid #ef4444; }
-.diff-header  { color: #60a5fa; font-weight: 700; display: block; opacity: 0.9; background: rgba(59,130,246,0.05); padding: 0.2rem 0.5rem; margin: 0.5rem 0; border-radius: 4px; }
+/* Utilities */
+.hidden { display: none !important; }
 
-/* ════════════════════════════════════════════════════════════
-   RESPONSIVE  ≤ 1024 px
-   ════════════════════════════════════════════════════════════ */
+.spinner {
+    width: 18px;
+    height: 18px;
+    border: 2px solid rgba(255,255,255,0.3);
+    border-top-color: #fff;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* Responsive */
 @media (max-width: 1024px) {
-    .app-container    { flex-direction: column; }
+    .app-container {
+        flex-direction: column;
+    }
     .sidebar {
+        flex: none;
         width: 100%;
-        flex-shrink: unset;
         height: auto;
         position: relative;
-        border-right: none;
-        border-bottom: 1px solid var(--border-glass);
-        padding: 2rem 1.5rem;
+        top: 0;
     }
-    .main-content {
-        height: auto;
-        overflow-y: visible;
-        overflow-x: hidden;
-        padding: 2rem 1.5rem;
+    .dashboard-grid {
+        grid-template-columns: 1fr;
     }
-    .dashboard-grid { grid-template-columns: 1fr; }
-    .card.full-width { grid-column: span 1; }
-    .implementation-results,
-    .code-snippets-container { max-height: none; }
-    .banner-content { flex-wrap: wrap; }
 }
