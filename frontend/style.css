@@ -329,7 +329,11 @@ body {
 
 /* Main Content (70%) */
 .main-content {
-    width: 70%;
+    /* flex:1 + min-width:0 lets this panel fill remaining space without
+       ever growing wider than what the sidebar leaves, which prevents
+       the dashboard grid from spilling outside the viewport. */
+    flex: 1 1 0;
+    min-width: 0;
     padding: 3rem;
     overflow-y: auto;
     height: 100vh;
@@ -361,7 +365,19 @@ body {
     align-items: center;
     justify-content: space-between;
     flex-wrap: wrap;
-    gap: 2rem;
+    gap: 1rem;
+    /* Prevent children from overflowing the banner horizontally */
+    overflow: hidden;
+    min-width: 0;
+}
+
+/* The text block (badge + h2) should shrink before the button does */
+.banner-text-block {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    flex: 1 1 0;
+    min-width: 0;
 }
 
 .celebrate-badge {
@@ -378,11 +394,14 @@ body {
 }
 
 .banner-content h2 {
-    font-size: 1.5rem;
+    font-size: 1.35rem;
     font-weight: 800;
-    margin-top: 0.65rem;
     color: #ffffff;
     letter-spacing: -0.02em;
+    /* Wrap long text instead of overflowing the banner */
+    overflow-wrap: break-word;
+    word-break: break-word;
+    min-width: 0;
 }
 
 .banner-glow {
@@ -436,8 +455,12 @@ body {
     flex-direction: column;
     gap: 1.25rem;
     transition: var(--transition-smooth);
+    /* min-width:0 overrides the default min-width:auto on grid children.
+       Without this, a wide <pre> inside will force the column to grow,
+       squashing the adjacent Implementation Strategy column to zero width. */
     min-width: 0;
-    width: 100%;
+    /* overflow:hidden clips any child that still bleeds past the card edge */
+    overflow: hidden;
 }
 
 .card:hover {
@@ -616,19 +639,32 @@ body {
 }
 
 .code-snippet pre {
-    padding: 1.25rem;
     margin: 0;
-    overflow-x: auto;
-    max-width: 100%;
+    padding: 1rem 1.25rem;
+    /* min-width:0 stops the pre from growing beyond .code-snippet's width */
+    min-width: 0;
     width: 100%;
+    /* overflow-x:auto gives a scrollbar for long lines INSIDE the snippet
+       instead of pushing the card/column wider */
+    overflow-x: auto;
+    overflow-y: hidden;
     white-space: pre;
+    /* Guarantee the code area is always visible even for 1-line snippets */
+    min-height: 3.5rem;
+    background: rgba(5, 5, 8, 0.9);
 }
 
 .code-snippet code {
     font-family: var(--font-mono);
-    font-size: 0.85rem;
-    line-height: 1.6;
+    font-size: 0.82rem;
+    line-height: 1.65;
     color: #e2e8f0;
+    /* display:block is critical — inline code inside a constrained pre
+       does not compute height correctly, causing the area to collapse */
+    display: block;
+    /* width:max-content lets the code be as wide as it needs;
+       the parent pre scrolls it horizontally */
+    width: max-content;
 }
 
 /* Implementation Strategy */
@@ -641,17 +677,21 @@ body {
 }
 
 .plan-block {
-    font-size: 0.95rem;
-    line-height: 1.7;
+    font-size: 0.92rem;
+    line-height: 1.75;
     color: var(--text-secondary);
     background: rgba(10, 10, 12, 0.8);
     border: 1px solid var(--border-glass);
     padding: 1.25rem;
     border-radius: 12px;
+    /* pre-wrap: renders newlines and leading spaces without word-wrapping at
+       individual characters. overflow-wrap ensures long single words still wrap. */
     white-space: pre-wrap;
-    width: 100%;
-    min-width: 0;
+    overflow-wrap: break-word;
     word-break: break-word;
+    min-width: 0;
+    /* clip any content that still tries to escape the card column */
+    overflow: hidden;
 }
 
 .terminal-container {
