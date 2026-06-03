@@ -11,26 +11,53 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <!-- The plain background canvas is set on the body. 
-         The app-window is the floating rounded dashboard. -->
     <div class="app-window">
         
-        <!-- Narrow Icon Sidebar -->
-        <aside class="sidebar-narrow">
-            <div class="sidebar-top">
+        <!-- Expandable Sidebar -->
+        <aside class="sidebar-expandable">
+            <div class="sidebar-icons">
                 <!-- CodeOnboard Logo -->
                 <div class="brand-icon" title="CodeOnboard">
                     <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                         <path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/>
                     </svg>
                 </div>
-                <!-- Dummy Icons to mimic reference 2 -->
-                <div class="nav-icon active"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><line x1="3" x2="21" y1="9" y2="9"/><line x1="9" x2="9" y1="21" y2="9"/></svg></div>
-                <div class="nav-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20v-6M6 20V10M18 20V4"/></svg></div>
-                <div class="nav-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/></svg></div>
+                <!-- Menu Icon -->
+                <div class="nav-icon active" title="Menu"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><line x1="3" x2="21" y1="9" y2="9"/><line x1="9" x2="9" y1="21" y2="9"/></svg></div>
+                <!-- Settings Icon -->
+                <div class="nav-icon" style="margin-top: auto; margin-bottom: 32px;" title="Settings"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg></div>
             </div>
-            <div class="sidebar-bottom">
-                <div class="nav-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg></div>
+
+            <!-- Expanding Content Area -->
+            <div class="sidebar-content">
+                <div class="brand-text">
+                    <h2>CodeOnboard</h2>
+                    <p class="subtitle">Agentic Issue Fixer</p>
+                </div>
+                
+                <form id="analyze-form">
+                    <div class="form-group">
+                        <label for="repo_url">GitHub Repository URL</label>
+                        <input type="url" id="repo_url" placeholder="https://github.com/owner/repo" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="github_token">Personal Access Token</label>
+                        <input type="password" id="github_token" placeholder="ghp_xxxx..." required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="issue_description">Issue Description</label>
+                        <textarea id="issue_description" placeholder="Paste bug details here..." required></textarea>
+                    </div>
+                    
+                    <button type="submit" id="submit-btn" class="btn btn-primary">
+                        <span class="btn-text">Start Agent</span>
+                        <span class="btn-loader hidden">
+                            <div class="spinner"></div> Running...
+                        </span>
+                    </button>
+                </form>
             </div>
         </aside>
 
@@ -39,7 +66,7 @@
             
             <!-- Header -->
             <header class="app-header">
-                <h1 class="project-title">Gitbo</h1>
+                <h1 class="project-title">Gitbo Analytics</h1>
                 
                 <!-- Horizontal Progress Tracker -->
                 <div class="pipeline-status hidden" id="pipeline-status">
@@ -65,13 +92,19 @@
                         </li>
                     </ul>
                 </div>
+
+                <div class="header-actions">
+                    <div class="header-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>
+                    <div class="header-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" x2="16.65" y1="21" y2="16.65"/></svg></div>
+                    <div class="header-avatar"><img src="https://ui-avatars.com/api/?name=User&background=3d8bff&color=fff" alt="User"></div>
+                </div>
             </header>
 
             <!-- Workspace Scrollable Area -->
             <div class="workspace-scroll">
                 
                 <!-- Status Banners -->
-                <div id="pr-banner" class="pr-success-banner glass-panel hidden">
+                <div id="pr-banner" class="pr-success-banner hidden">
                     <div class="banner-content">
                         <div class="banner-text-block">
                             <span class="celebrate-badge">🎉 PR Successfully Opened!</span>
@@ -81,7 +114,7 @@
                     </div>
                 </div>
 
-                <div id="error-banner" class="error-banner glass-panel hidden">
+                <div id="error-banner" class="error-banner hidden">
                     <div class="banner-content">
                         <span class="error-badge">⚠️ Pipeline Warning/Error</span>
                         <ul id="error-list"></ul>
@@ -91,130 +124,113 @@
                 <!-- Dashboard Grid -->
                 <div class="dashboard-grid">
                     
-                    <!-- Central Hero Card (Form + 3D Asset) -->
-                    <section class="hero-card bento-card full-width">
-                        <div class="hero-content">
-                            <div class="form-section">
-                                <h2>Analyze Repository</h2>
-                                <p class="hero-subtitle">Input your issue details below to start the autonomous agentic pipeline.</p>
-                                
-                                <form id="analyze-form">
-                                    <div class="form-row">
-                                        <div class="form-group flex-1">
-                                            <label for="repo_url">GitHub Repository URL</label>
-                                            <input type="url" id="repo_url" placeholder="https://github.com/owner/repo" required>
-                                        </div>
-                                        <div class="form-group flex-1">
-                                            <label for="github_token">Personal Access Token (PAT)</label>
-                                            <input type="password" id="github_token" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx" required>
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="issue_description">GitHub Issue Description</label>
-                                        <textarea id="issue_description" placeholder="Paste the issue description, stack trace, or bug description here..." required></textarea>
-                                    </div>
-                                    <button type="submit" id="submit-btn" class="btn btn-primary">
-                                        <span class="btn-text">Start Analysis</span>
-                                        <span class="btn-loader hidden">
-                                            <div class="spinner"></div> Running...
-                                        </span>
-                                    </button>
-                                </form>
+                    <!-- Left Hero Card (Matches the Orange Reference Image) -->
+                    <section class="hero-card dashboard-panel">
+                        <div class="hero-text-content">
+                            <span class="hero-subtitle">Agentic Solution</span>
+                            <h2>Optimize Your <br>Repository</h2>
+                            <button class="btn btn-outline hero-action" onclick="document.querySelector('.sidebar-expandable').classList.add('hover-active')">Start Now</button>
+                        </div>
+                        
+                        <div class="hero-image-container">
+                            <img src="assets/bg.png" alt="Hero Portrait" class="hero-image">
+                            <!-- Orange Glow Effect -->
+                            <div class="hero-glow"></div>
+                        </div>
+
+                        <!-- Stats Strip (Bottom of Hero Card) -->
+                        <div class="hero-stats glass-overlay">
+                            <div class="stat-item">
+                                <h3>76k</h3>
+                                <p><span class="dot dot-blue"></span> Lines Analyzed</p>
                             </div>
-                            
-                            <!-- 3D Asset Container with Glow -->
-                            <div class="hero-asset-container">
-                                <div class="asset-glow"></div>
-                                <img src="assets/bg.png" alt="3D Cyber Bust" class="hero-asset">
-                                
-                                <!-- Decorative Stats Overlays -->
-                                <div class="floating-stat stat-1 glass-panel">
-                                    <span class="stat-value">Autonomous</span>
-                                    <span class="stat-label">Agentic Pipeline</span>
-                                </div>
-                                <div class="floating-stat stat-2 glass-panel">
-                                    <span class="stat-value">Semantic</span>
-                                    <span class="stat-label">Code Search</span>
-                                </div>
+                            <div class="stat-item">
+                                <h3>1.5m</h3>
+                                <p><span class="dot dot-pink"></span> AST Nodes</p>
+                            </div>
+                            <div class="stat-item">
+                                <h3 class="highlight-orange">$3.6k</h3>
+                                <p><span class="dot dot-green"></span> Saved Cost</p>
+                            </div>
+                            <div class="stat-item">
+                                <h3>47</h3>
+                                <p><span class="dot dot-orange"></span> Files Fixed</p>
                             </div>
                         </div>
                     </section>
 
-                    <!-- Card 1: Issue Analysis -->
-                    <section class="bento-card glass-panel" id="card-issue-analysis">
-                        <div class="card-header">
-                            <svg class="card-svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>
-                            <h2>Issue Analysis</h2>
-                        </div>
-                        <div class="card-body">
-                            <div class="placeholder-text">Awaiting issue submission...</div>
-                            <div class="analysis-results hidden">
-                                <div class="metric-row">
-                                    <div class="metric">
-                                        <span class="metric-label">Category</span>
-                                        <span class="metric-value badge" id="analysis-category">-</span>
+                    <!-- Right Column Wrapper -->
+                    <div class="right-column-grid">
+                        
+                        <!-- Top Right: Issue Analysis (mimics the line chart card) -->
+                        <section class="dashboard-panel chart-panel" id="card-issue-analysis">
+                            <div class="panel-header">
+                                <h3>Issue Analysis</h3>
+                                <svg class="panel-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>
+                            </div>
+                            <div class="panel-body">
+                                <div class="placeholder-text">Waiting for issue details...</div>
+                                <div class="analysis-results hidden">
+                                    <div class="metric-row">
+                                        <div class="metric">
+                                            <span class="metric-label">Category</span>
+                                            <span class="metric-value badge" id="analysis-category">-</span>
+                                        </div>
+                                        <div class="metric">
+                                            <span class="metric-label">Difficulty</span>
+                                            <span class="metric-value badge" id="analysis-difficulty">-</span>
+                                        </div>
                                     </div>
-                                    <div class="metric">
-                                        <span class="metric-label">Difficulty</span>
-                                        <span class="metric-value badge" id="analysis-difficulty">-</span>
+                                    <div class="problem-summary">
+                                        <p id="analysis-problem">-</p>
                                     </div>
-                                </div>
-                                <div class="problem-summary">
-                                    <h3>Extracted Core Bug</h3>
-                                    <p id="analysis-problem">-</p>
-                                </div>
-                                <div class="skills-tags">
-                                    <h3>Target Skills & Technologies</h3>
                                     <div class="tags-container" id="analysis-skills"></div>
                                 </div>
                             </div>
-                        </div>
-                    </section>
+                        </section>
 
-                    <!-- Card 2: Relevant Code Files -->
-                    <section class="bento-card glass-panel" id="card-relevant-code">
-                        <div class="card-header">
-                            <svg class="card-svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m18 16 4-4-4-4"/><path d="m6 8-4 4 4 4"/><path d="m14.5 4-5 16"/></svg>
-                            <h2>Relevant Code Snippets</h2>
+                        <!-- Bottom Right: Implementation Strategy (mimics the backpack card) -->
+                        <section class="dashboard-panel obj-panel" id="card-implementation">
+                            <div class="panel-header">
+                                <h3>Implementation Strategy</h3>
+                                <span class="badge badge-accent" id="impl-effort">-</span>
+                            </div>
+                            <div class="panel-body">
+                                <div class="placeholder-text">Architected changes will appear here.</div>
+                                <div class="implementation-results hidden">
+                                    <div class="architect-section">
+                                        <h4>Root Cause</h4>
+                                        <div class="plan-block" id="impl-root-cause"></div>
+                                    </div>
+                                    <div class="architect-section">
+                                        <h4>Recommended Changes</h4>
+                                        <div class="plan-block" id="impl-recommended"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+                        
+                    </div>
+
+                    <!-- Middle Wide Card: Code Snippets -->
+                    <section class="dashboard-panel full-width" id="card-relevant-code">
+                        <div class="panel-header">
+                            <h3>Relevant Code Snippets</h3>
+                            <svg class="panel-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m18 16 4-4-4-4"/><path d="m6 8-4 4 4 4"/><path d="m14.5 4-5 16"/></svg>
                         </div>
-                        <div class="card-body">
-                            <div class="placeholder-text">Code files containing potential bugs will appear here.</div>
+                        <div class="panel-body">
+                            <div class="placeholder-text">Relevant context will be populated via semantic search.</div>
                             <div class="code-snippets-container hidden" id="code-snippets"></div>
                         </div>
                     </section>
 
-                    <!-- Card 3: Implementation Strategy -->
-                    <section class="bento-card glass-panel" id="card-implementation">
-                        <div class="card-header">
-                            <svg class="card-svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96-.44 2.5 2.5 0 0 1 0-3.12 3.01 3.01 0 0 1 0-3.88 2.5 2.5 0 0 1 0-3.12A2.5 2.5 0 0 1 9.5 2Z"/><path d="M14.5 2A2.5 2.5 0 0 0 12 4.5v15a2.5 2.5 0 0 0 4.96-.44 2.5 2.5 0 0 0 0-3.12 3.01 3.01 0 0 0 0-3.88 2.5 2.5 0 0 0 0-3.12A2.5 2.5 0 0 0 14.5 2Z"/></svg>
-                            <h2>Implementation Strategy</h2>
+                    <!-- Bottom Wide Card: Live Git Diff (mimics "Your top videos" list) -->
+                    <section class="dashboard-panel list-panel full-width" id="card-git-diff">
+                        <div class="panel-header">
+                            <h3>Live Git Diff</h3>
+                            <div class="panel-dropdown">View Details <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></div>
                         </div>
-                        <div class="card-body">
-                            <div class="placeholder-text">Architected changes and root cause analysis will be displayed here.</div>
-                            <div class="implementation-results hidden">
-                                <div class="architect-section">
-                                    <h3>Root Cause Analysis</h3>
-                                    <div class="plan-block" id="impl-root-cause"></div>
-                                </div>
-                                <div class="architect-section">
-                                    <h3>Recommended Changes</h3>
-                                    <div class="plan-block" id="impl-recommended"></div>
-                                </div>
-                                <div class="architect-section">
-                                    <h3>Estimated Effort</h3>
-                                    <span class="badge badge-accent" id="impl-effort">-</span>
-                                </div>
-                            </div>
-                        </div>
-                    </section>
-
-                    <!-- Card 4: Live Git Diff -->
-                    <section class="bento-card glass-panel full-width" id="card-git-diff">
-                        <div class="card-header">
-                            <svg class="card-svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m10 10-2 2 2 2"/><path d="m14 14 2-2-2-2"/></svg>
-                            <h2>Live Git Diff</h2>
-                        </div>
-                        <div class="card-body no-padding">
+                        <div class="panel-body no-padding">
                             <div class="placeholder-text padded">The generated git diff showing modifications will be shown here.</div>
                             <div class="terminal-container hidden" id="diff-container">
                                 <div class="terminal-header">
@@ -232,6 +248,13 @@
             </div>
         </main>
     </div>
+    
     <script src="app.js"></script>
+    <script>
+        // Temporary fix for sidebar hover if needed by mobile/touch
+        document.querySelector('.sidebar-expandable').addEventListener('mouseleave', function() {
+            this.classList.remove('hover-active');
+        });
+    </script>
 </body>
 </html>
