@@ -224,12 +224,12 @@ textarea { resize: vertical; min-height: 120px; }
 }
 
 .hero-text-content {
-    padding: 40px;
+    padding: 40px 40px 100px 40px; /* Added bottom padding to ensure it doesn't hit the stats */
     flex: 1;
     z-index: 2;
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: flex-start;
 }
 
 .hero-subtitle { font-size: 0.85rem; color: var(--neon-orange); text-transform: uppercase; letter-spacing: 1px; font-weight: 600; margin-bottom: 12px; }
