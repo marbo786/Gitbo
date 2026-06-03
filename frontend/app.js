@@ -170,14 +170,29 @@ document.addEventListener("DOMContentLoaded", () => {
                 data.retrieved_context.forEach(chunk => {
                     const snippetDiv = document.createElement("div");
                     snippetDiv.className = "code-snippet";
-                    
-                    snippetDiv.innerHTML = `
-                        <div class="snippet-file">
-                            <span>${chunk.file_path}</span>
-                            <span class="snippet-lines">Lines ${chunk.start_line}-${chunk.end_line}</span>
-                        </div>
-                        <pre><code>${escapeHTML(chunk.content)}</code></pre>
-                    `;
+
+                    // Build with DOM manipulation to avoid XSS in file paths
+                    const fileBar = document.createElement("div");
+                    fileBar.className = "snippet-file";
+
+                    const pathSpan = document.createElement("span");
+                    pathSpan.textContent = chunk.file_path || "unknown";
+
+                    const linesSpan = document.createElement("span");
+                    linesSpan.className = "snippet-lines";
+                    linesSpan.textContent = `Lines ${chunk.start_line ?? "?"}-${chunk.end_line ?? "?"}`;
+
+                    fileBar.appendChild(pathSpan);
+                    fileBar.appendChild(linesSpan);
+
+                    const pre = document.createElement("pre");
+                    const code = document.createElement("code");
+                    // textContent is safe — no HTML parsing
+                    code.textContent = chunk.content || "";
+                    pre.appendChild(code);
+
+                    snippetDiv.appendChild(fileBar);
+                    snippetDiv.appendChild(pre);
                     snippetsEl.appendChild(snippetDiv);
                 });
             }
@@ -185,9 +200,27 @@ document.addEventListener("DOMContentLoaded", () => {
             // 3. Render Implementation Plan
             if (data.implementation_plan && Object.keys(data.implementation_plan).length > 0) {
                 showCardContent(cardImpl, ".implementation-results");
-                document.getElementById("impl-root-cause").textContent = data.implementation_plan.root_cause || "N/A";
-                document.getElementById("impl-recommended").textContent = data.implementation_plan.recommended_changes || "N/A";
-                document.getElementById("impl-effort").textContent = data.implementation_plan.estimated_effort || "N/A";
+
+                document.getElementById("impl-root-cause").textContent =
+                    data.implementation_plan.root_cause || "N/A";
+
+                // recommended_changes can be an array of steps or a plain string
+                const rec = data.implementation_plan.recommended_changes;
+                let recText;
+                if (Array.isArray(rec)) {
+                    recText = rec.join("\n\n");
+                } else if (rec && typeof rec === "object") {
+                    // Fallback: object keys may be step descriptions
+                    recText = Object.entries(rec)
+                        .map(([k, v]) => `${k}: ${v}`)
+                        .join("\n\n");
+                } else {
+                    recText = rec || "N/A";
+                }
+                document.getElementById("impl-recommended").textContent = recText;
+
+                document.getElementById("impl-effort").textContent =
+                    data.implementation_plan.estimated_effort || "N/A";
             }
             
             // 4. Render Git Diff

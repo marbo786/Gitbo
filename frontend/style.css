@@ -7,32 +7,34 @@
     --surface-input: rgba(10, 10, 12, 0.7);
     --border-glass: rgba(255, 255, 255, 0.06);
     --border-glass-hover: rgba(255, 255, 255, 0.15);
-    
+
     --accent-indigo: #6366f1;
     --accent-purple: #8b5cf6;
     --accent-indigo-hover: #4f46e5;
     --accent-indigo-glow: rgba(99, 102, 241, 0.25);
-    
+
     --success-green: #10b981;
     --success-green-bg: rgba(16, 185, 129, 0.08);
     --success-green-border: rgba(16, 185, 129, 0.2);
-    
+
     --danger-red: #ef4444;
     --danger-red-bg: rgba(239, 68, 68, 0.08);
     --danger-red-border: rgba(239, 68, 68, 0.2);
-    
+
     --text-primary: #f8fafc;
     --text-secondary: #cbd5e1;
     --text-muted: #64748b;
-    
+
     --font-sans: 'Outfit', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
-    
+
     --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 /* Base resets & custom scrollbars */
-* {
+*,
+*::before,
+*::after {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
@@ -46,7 +48,7 @@ body {
     display: flex;
     overflow-x: hidden;
     line-height: 1.5;
-    background-image: 
+    background-image:
         radial-gradient(circle at 5% 15%, rgba(99, 102, 241, 0.08) 0%, transparent 45%),
         radial-gradient(circle at 95% 85%, rgba(139, 92, 246, 0.08) 0%, transparent 45%);
 }
@@ -71,6 +73,8 @@ body {
     display: flex;
     width: 100%;
     min-height: 100vh;
+    /* Prevent the entire layout from overflowing horizontally */
+    overflow: hidden;
 }
 
 /* Glassmorphism token utility */
@@ -82,7 +86,7 @@ body {
     box-shadow: 0 20px 50px 0 rgba(0, 0, 0, 0.45);
 }
 
-/* Sidebar Layout & Controls */
+/* ─── Sidebar ─────────────────────────────────────────────────── */
 .sidebar {
     width: 30%;
     min-width: 340px;
@@ -96,6 +100,8 @@ body {
     position: sticky;
     top: 0;
     overflow-y: auto;
+    /* Sidebar must not shrink or grow in flex row */
+    flex-shrink: 0;
 }
 
 .brand {
@@ -111,11 +117,12 @@ body {
     -webkit-text-fill-color: transparent;
     filter: drop-shadow(0 0 15px rgba(99, 102, 241, 0.5));
     animation: float 4s ease-in-out infinite alternate;
+    flex-shrink: 0;
 }
 
 @keyframes float {
     from { transform: translateY(0px) rotate(0deg); }
-    to { transform: translateY(-4px) rotate(5deg); }
+    to   { transform: translateY(-4px) rotate(5deg); }
 }
 
 .brand-text h1 {
@@ -156,7 +163,7 @@ body {
     text-transform: uppercase;
 }
 
-.form-group input, 
+.form-group input,
 .form-group textarea {
     background: var(--surface-input);
     border: 1px solid var(--border-glass);
@@ -166,9 +173,12 @@ body {
     font-family: var(--font-sans);
     font-size: 0.95rem;
     transition: var(--transition-smooth);
+    /* Prevent inputs from overflowing their column */
+    width: 100%;
+    min-width: 0;
 }
 
-.form-group input:focus, 
+.form-group input:focus,
 .form-group textarea:focus {
     outline: none;
     border-color: var(--accent-indigo);
@@ -189,7 +199,7 @@ body {
     line-height: 1.4;
 }
 
-/* Button & Spinners */
+/* ─── Buttons & Spinners ─────────────────────────────────────── */
 .btn {
     display: inline-flex;
     align-items: center;
@@ -209,6 +219,7 @@ body {
     background: linear-gradient(135deg, var(--accent-indigo) 0%, var(--accent-purple) 100%);
     color: #ffffff;
     box-shadow: 0 4px 20px 0 rgba(99, 102, 241, 0.35);
+    width: 100%;
 }
 
 .btn-primary:hover {
@@ -230,6 +241,7 @@ body {
     background: var(--success-green);
     color: #ffffff;
     box-shadow: 0 4px 15px 0 rgba(16, 185, 129, 0.3);
+    white-space: nowrap;
 }
 
 .btn-success:hover {
@@ -251,6 +263,7 @@ body {
     border-radius: 50%;
     border-top-color: #ffffff;
     animation: spin 0.8s linear infinite;
+    flex-shrink: 0;
 }
 
 @keyframes spin {
@@ -261,7 +274,7 @@ body {
     display: none !important;
 }
 
-/* Stepper Indicator */
+/* ─── Pipeline Stepper ───────────────────────────────────────── */
 .pipeline-status {
     border-top: 1px solid var(--border-glass);
     padding-top: 2rem;
@@ -317,19 +330,22 @@ body {
 .step-dot {
     width: 12px;
     height: 12px;
+    min-width: 12px; /* prevent squishing */
     border-radius: 50%;
     background: var(--text-muted);
     transition: var(--transition-smooth);
 }
 
 @keyframes pulse-dot {
-    from { transform: scale(1); opacity: 0.5; }
-    to { transform: scale(1.35); opacity: 1; }
+    from { transform: scale(1);    opacity: 0.5; }
+    to   { transform: scale(1.35); opacity: 1;   }
 }
 
-/* Main Content (70%) */
+/* ─── Main Content (right panel) ─────────────────────────────── */
 .main-content {
-    width: 70%;
+    /* Take all remaining horizontal space but never let it overflow */
+    flex: 1 1 0;
+    min-width: 0;
     padding: 3rem;
     overflow-y: auto;
     height: 100vh;
@@ -338,7 +354,7 @@ body {
     gap: 2.5rem;
 }
 
-/* PR Success Banner */
+/* ─── PR Success Banner ──────────────────────────────────────── */
 .pr-success-banner {
     position: relative;
     border-radius: 16px;
@@ -347,11 +363,12 @@ body {
     background: linear-gradient(135deg, rgba(16, 185, 129, 0.05) 0%, rgba(9, 9, 11, 0.4) 100%);
     overflow: hidden;
     animation: slideDown 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    flex-shrink: 0;
 }
 
 @keyframes slideDown {
     from { transform: translateY(-30px); opacity: 0; }
-    to { transform: translateY(0); opacity: 1; }
+    to   { transform: translateY(0);     opacity: 1; }
 }
 
 .banner-content {
@@ -361,7 +378,7 @@ body {
     align-items: center;
     justify-content: space-between;
     flex-wrap: wrap;
-    gap: 2rem;
+    gap: 1rem;
 }
 
 .celebrate-badge {
@@ -378,7 +395,7 @@ body {
 }
 
 .banner-content h2 {
-    font-size: 1.5rem;
+    font-size: 1.35rem;
     font-weight: 800;
     margin-top: 0.65rem;
     color: #ffffff;
@@ -387,21 +404,19 @@ body {
 
 .banner-glow {
     position: absolute;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
+    inset: 0;
     background: radial-gradient(circle at 90% 50%, rgba(16, 185, 129, 0.12) 0%, transparent 60%);
     pointer-events: none;
     z-index: 1;
 }
 
-/* Error/Warning Banner */
+/* ─── Error/Warning Banner ───────────────────────────────────── */
 .error-banner {
     border-radius: 16px;
     padding: 1.75rem 2.25rem;
     border: 1px solid var(--danger-red-border);
     background: linear-gradient(135deg, rgba(239, 68, 68, 0.04) 0%, rgba(9, 9, 11, 0.4) 100%);
+    flex-shrink: 0;
 }
 
 .error-badge {
@@ -422,13 +437,22 @@ body {
     line-height: 1.6;
 }
 
-/* Dashboard Workspace Grid */
+/* ─── Dashboard Grid ─────────────────────────────────────────── */
+/*
+ * CRITICAL: minmax(0, 1fr) tells the grid that each column's minimum
+ * size is 0 (not the default min-content). Without this, a child with
+ * wide content (e.g. <pre> code blocks) can force the column to grow
+ * beyond 50%, squashing the adjacent column to zero.
+ */
 .dashboard-grid {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 2rem;
+    /* grid rows should size to content */
+    align-items: start;
 }
 
+/* ─── Cards ──────────────────────────────────────────────────── */
 .card {
     border-radius: 16px;
     padding: 2rem;
@@ -436,8 +460,14 @@ body {
     flex-direction: column;
     gap: 1.25rem;
     transition: var(--transition-smooth);
+    /*
+     * min-width: 0 is the crucial override.
+     * By default flex/grid items have min-width: auto which lets
+     * them grow to fit their content, breaking the grid columns.
+     */
     min-width: 0;
-    width: 100%;
+    /* overflow hidden on the card clips anything that still bleeds out */
+    overflow: hidden;
 }
 
 .card:hover {
@@ -450,18 +480,16 @@ body {
     grid-column: span 2;
 }
 
+/* ─── Card Header ────────────────────────────────────────────── */
 .card-header {
     display: flex;
     align-items: center;
     gap: 0.9rem;
     border-bottom: 1px solid var(--border-glass);
     padding-bottom: 1rem;
+    /* prevent the header from growing beyond card width */
     min-width: 0;
-    width: 100%;
-}
-
-.card-icon {
-    font-size: 1.4rem;
+    overflow: hidden;
 }
 
 .card-header h2 {
@@ -469,32 +497,58 @@ body {
     font-weight: 800;
     color: var(--text-primary);
     letter-spacing: -0.01em;
-}
-
-.card-body {
-    flex-grow: 1;
+    /* truncate the heading if it somehow overflows */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
     min-width: 0;
-    width: 100%;
 }
 
+.card-svg {
+    flex-shrink: 0;
+    color: var(--accent-indigo);
+}
+
+/* ─── Card Body ──────────────────────────────────────────────── */
+.card-body {
+    flex: 1 1 auto;
+    /* The body must also respect the column boundary */
+    min-width: 0;
+    overflow: hidden;
+}
+
+.card-body.no-padding {
+    padding: 0;
+    margin: -2rem;
+    margin-top: 0;
+}
+
+/* ─── Placeholder ─────────────────────────────────────────────── */
 .placeholder-text {
     color: var(--text-muted);
     font-style: italic;
     font-size: 0.95rem;
     text-align: center;
-    padding: 3rem 0;
+    padding: 3rem 1rem;
     line-height: 1.5;
 }
 
 .placeholder-text.padded {
-    padding: 5rem 0;
+    padding: 5rem 1rem;
 }
 
-/* Metric and Tags Details */
+/* ─── Issue Analysis Card ────────────────────────────────────── */
+.analysis-results {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    min-width: 0;
+}
+
 .metric-row {
     display: flex;
     gap: 2rem;
-    margin-bottom: 1.75rem;
+    flex-wrap: wrap;
 }
 
 .metric {
@@ -527,7 +581,12 @@ body {
     box-shadow: 0 4px 10px rgba(99, 102, 241, 0.1);
 }
 
-.problem-summary h3, 
+.problem-summary,
+.skills-tags {
+    min-width: 0;
+}
+
+.problem-summary h3,
 .skills-tags h3,
 .architect-section h3 {
     font-size: 0.8rem;
@@ -546,6 +605,12 @@ body {
     padding: 1.1rem;
     border-radius: 10px;
     border: 1px solid rgba(255, 255, 255, 0.02);
+    /*
+     * Allow long words to wrap instead of overflowing.
+     * overflow-wrap is the modern standard; word-break is for CJK.
+     */
+    overflow-wrap: break-word;
+    word-break: break-word;
 }
 
 .tags-container {
@@ -564,6 +629,7 @@ body {
     font-size: 0.8rem;
     font-weight: 700;
     transition: var(--transition-smooth);
+    white-space: nowrap;
 }
 
 .tag:hover {
@@ -571,15 +637,20 @@ body {
     border-color: var(--text-muted);
 }
 
-/* Relevant Code Snippets */
+/* ─── Relevant Code Snippets Card ────────────────────────────── */
+/*
+ * The container scrolls vertically so it doesn't grow the card
+ * beyond the viewport. It MUST have min-width:0 so it respects
+ * the grid column boundary.
+ */
 .code-snippets-container {
     display: flex;
     flex-direction: column;
-    gap: 1.75rem;
-    max-height: 500px;
+    gap: 1.25rem;
+    max-height: 480px;
     overflow-y: auto;
-    padding-right: 0.75rem;
-    width: 100%;
+    overflow-x: hidden; /* horizontal overflow is handled per-snippet */
+    padding-right: 0.5rem;
     min-width: 0;
 }
 
@@ -587,9 +658,10 @@ body {
     background: rgba(10, 10, 12, 0.8);
     border: 1px solid var(--border-glass);
     border-radius: 12px;
+    /* overflow:hidden clips the <pre> to the snippet box */
     overflow: hidden;
     transition: var(--transition-smooth);
-    width: 100%;
+    /* min-width:0 prevents this flex child from exceeding the container */
     min-width: 0;
 }
 
@@ -597,70 +669,113 @@ body {
     border-color: var(--border-glass-hover);
 }
 
+/* File path header row */
 .snippet-file {
     background: rgba(255, 255, 255, 0.02);
-    padding: 0.75rem 1.25rem;
+    padding: 0.6rem 1rem;
     font-family: var(--font-mono);
-    font-size: 0.8rem;
+    font-size: 0.78rem;
     font-weight: 500;
     border-bottom: 1px solid var(--border-glass);
     color: var(--text-secondary);
     display: flex;
     justify-content: space-between;
     align-items: center;
+    gap: 0.5rem;
+    min-width: 0;
+}
+
+/* The file path should truncate, not overflow */
+.snippet-file > span:first-child {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    min-width: 0;
+    flex: 1;
 }
 
 .snippet-lines {
     color: var(--text-muted);
-    font-size: 0.75rem;
+    font-size: 0.72rem;
+    white-space: nowrap;
+    flex-shrink: 0;
 }
 
+/*
+ * The <pre> block is where long lines live.
+ * - display:block + width:100% makes it fill the snippet card.
+ * - overflow-x:auto shows a horizontal scrollbar for long lines
+ *   INSIDE the snippet, so the snippet box doesn't grow.
+ * - min-width:0 ensures the pre itself doesn't grow beyond
+ *   the snippet card's boundary.
+ */
 .code-snippet pre {
-    padding: 1.25rem;
-    margin: 0;
-    overflow-x: auto;
-    max-width: 100%;
+    display: block;
     width: 100%;
+    min-width: 0;
+    margin: 0;
+    padding: 1rem;
+    overflow-x: auto;
+    overflow-y: hidden;
+    /* white-space:pre preserves indentation and renders code correctly */
     white-space: pre;
 }
 
 .code-snippet code {
     font-family: var(--font-mono);
-    font-size: 0.85rem;
-    line-height: 1.6;
+    font-size: 0.82rem;
+    line-height: 1.65;
     color: #e2e8f0;
+    /* display:block so the code element fills its parent <pre> */
+    display: block;
+    width: max-content; /* let it be as wide as needed; pre clips it */
 }
 
-/* Implementation Strategy */
+/* ─── Implementation Strategy Card ──────────────────────────── */
 .implementation-results {
     display: flex;
     flex-direction: column;
-    gap: 2rem;
-    width: 100%;
+    gap: 1.75rem;
+    min-width: 0;
+    /* Make the results block scrollable if content is very long */
+    max-height: 480px;
+    overflow-y: auto;
+    padding-right: 0.5rem;
+}
+
+.architect-section {
     min-width: 0;
 }
 
 .plan-block {
-    font-size: 0.95rem;
-    line-height: 1.7;
+    font-size: 0.92rem;
+    line-height: 1.75;
     color: var(--text-secondary);
     background: rgba(10, 10, 12, 0.8);
     border: 1px solid var(--border-glass);
     padding: 1.25rem;
     border-radius: 12px;
+    /*
+     * white-space:pre-wrap renders newlines and spaces as typed
+     * while still wrapping at the container boundary.
+     * overflow-wrap:break-word prevents single long words/URLs
+     * from escaping the box.
+     */
     white-space: pre-wrap;
-    width: 100%;
-    min-width: 0;
+    overflow-wrap: break-word;
     word-break: break-word;
+    min-width: 0;
+    /* Horizontal overflow should clip, not stretch the column */
+    overflow: hidden;
 }
 
+/* ─── Live Git Diff Terminal ─────────────────────────────────── */
 .terminal-container {
     background: #050508;
     border-radius: 12px;
     border: 1px solid #1c1c24;
     overflow: hidden;
     box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6);
-    margin: 0;
     width: 100%;
     min-width: 0;
 }
@@ -671,6 +786,7 @@ body {
     display: flex;
     align-items: center;
     border-bottom: 1px solid #1c1c24;
+    flex-shrink: 0;
 }
 
 .terminal-dot {
@@ -679,11 +795,12 @@ body {
     border-radius: 50%;
     display: inline-block;
     margin-right: 6px;
+    flex-shrink: 0;
 }
 
-.terminal-dot.red { background: #ef4444; }
+.terminal-dot.red    { background: #ef4444; }
 .terminal-dot.yellow { background: #fbbf24; }
-.terminal-dot.green { background: #10b981; }
+.terminal-dot.green  { background: #10b981; }
 
 .terminal-title {
     color: var(--text-muted);
@@ -693,25 +810,35 @@ body {
     font-weight: 600;
 }
 
+/*
+ * The <pre> inside the terminal:
+ * - overflow-x:auto gives a horizontal scrollbar for wide diffs
+ * - overflow-y:auto allows vertical scroll within the bounded height
+ * - min-width:0 stops it from pushing the card wider
+ */
 .terminal-body {
     margin: 0;
     padding: 1.5rem;
-    max-height: 600px;
+    max-height: 550px;
     overflow-y: auto;
     overflow-x: auto;
     background: #020204;
+    min-width: 0;
     width: 100%;
+    /* white-space:pre is required so diff lines don't word-wrap */
+    white-space: pre;
 }
 
 .terminal-body code {
     font-family: var(--font-mono);
-    font-size: 0.85rem;
+    font-size: 0.82rem;
     line-height: 1.7;
     display: block;
-    white-space: pre;
+    white-space: inherit; /* inherits pre from parent */
+    width: max-content;   /* expand to content width; parent clips */
 }
 
-/* Diff Syntax Styling */
+/* ─── Diff Syntax Colours ────────────────────────────────────── */
 .diff-added {
     color: #34d399;
     background-color: rgba(16, 185, 129, 0.1);
@@ -739,13 +866,15 @@ body {
     border-radius: 4px;
 }
 
-/* Responsive adjustment */
+/* ─── Responsive ─────────────────────────────────────────────── */
 @media (max-width: 1100px) {
     .app-container {
         flex-direction: column;
+        overflow: visible;
     }
     .sidebar {
         width: 100%;
+        min-width: unset;
         max-width: 100%;
         height: auto;
         position: relative;
@@ -763,5 +892,9 @@ body {
     }
     .card.full-width {
         grid-column: span 1;
+    }
+    .implementation-results,
+    .code-snippets-container {
+        max-height: none;
     }
 }
