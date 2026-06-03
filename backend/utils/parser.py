@@ -1,233 +1,264 @@
 import os
 import re
+from pathlib import Path
 
-def fuzzy_replace(content: str, search_str: str, replace_str: str) -> str:
-    """Whitespace-insensitive replacement of search_str in content."""
-    def normalize(s):
-        return re.sub(r'\s+', '', s)
-        
-    norm_search = normalize(search_str)
-    if not norm_search:
+
+# ── Path safety ───────────────────────────────────────────────────────────────
+
+def _safe_resolve(repo_dir: str, rel_path: str) -> str | None:
+    """
+    FIX #2: Resolve rel_path relative to repo_dir and verify the result stays
+    inside repo_dir.  Returns the absolute path if safe, or None if the path
+    escapes the repository root (e.g. FILE: ../../etc/passwd).
+    """
+    repo_root = Path(repo_dir).resolve()
+    target = (repo_root / rel_path).resolve()
+    try:
+        target.relative_to(repo_root)  # raises ValueError if outside root
+        return str(target)
+    except ValueError:
         return None
-        
-    orig_chars = []
-    norm_indices = []
-    
+
+
+# ── Fuzzy replacement ─────────────────────────────────────────────────────────
+
+# Minimum non-whitespace characters the search block must contain before we
+# allow fuzzy (whitespace-insensitive) matching.  Short blocks are too
+# ambiguous and can corrupt unrelated code.
+_FUZZY_MIN_CHARS = 20
+
+
+def fuzzy_replace(content: str, search_str: str, replace_str: str) -> str | None:
+    """
+    Whitespace-insensitive replacement of search_str in content.
+
+    FIX #14: We now reject fuzzy matching when the normalised search string is
+    shorter than _FUZZY_MIN_CHARS, because very short patterns match too many
+    unrelated locations.
+    """
+    def normalize(s: str) -> str:
+        return re.sub(r"\s+", "", s)
+
+    norm_search = normalize(search_str)
+    if not norm_search or len(norm_search) < _FUZZY_MIN_CHARS:
+        return None
+
+    orig_chars: list[str] = []
+    norm_indices: list[int] = []
+
     for idx, char in enumerate(content):
         if not char.isspace():
             orig_chars.append(char)
             norm_indices.append(idx)
-            
+
     norm_content = "".join(orig_chars)
-    
     match_idx = norm_content.find(norm_search)
     if match_idx == -1:
         return None
-        
+
     start_orig = norm_indices[match_idx]
     end_orig = norm_indices[match_idx + len(norm_search) - 1] + 1
-    
     return content[:start_orig] + replace_str + content[end_orig:]
+
+
+# ── Search/Replace parser ─────────────────────────────────────────────────────
 
 def apply_search_replace(repo_dir: str, llm_output: str) -> dict:
     """
-    Parses LLM output containing search/replace blocks using a robust state machine.
-    Handles unclosed blocks, missing delimiters, and consecutive blocks.
+    Parse LLM output containing search/replace blocks and apply them to the
+    cloned repository.
+
+    State machine states: 'outside' | 'search' | 'replace'
     """
     lines = llm_output.splitlines()
     n = len(lines)
-    
-    current_file = None
-    blocks_by_file = {}
-    
-    # State can be: 'outside', 'search', 'replace'
-    state = 'outside'
-    search_lines = []
-    replace_lines = []
-    
+
+    current_file: str | None = None
+    blocks_by_file: dict[str, list] = {}
+
+    state = "outside"
+    search_lines: list[str] = []
+    replace_lines: list[str] = []
+
     i = 0
     while i < n:
         line = lines[i]
         line_stripped = line.strip()
-        
-        # Check for file path markers
-        file_match = re.match(r'^(?:FILE|File|filepath|Filepath|Path|path|Target File|Target file)\s*:\s*`?([^`\s]+)`?', line_stripped)
+
+        # ── File path markers ──────────────────────────────────────────────
+        file_match = re.match(
+            r"^(?:FILE|File|filepath|Filepath|Path|path|Target File|Target file)\s*:\s*`?([^`\s]+)`?",
+            line_stripped,
+        )
         if not file_match:
-            file_match = re.match(r'^###?\s*`?([a-zA-Z0-9_.\-/]+\.[a-zA-Z0-9]+)`?$', line_stripped)
-            
+            file_match = re.match(
+                r"^###?\s*`?([a-zA-Z0-9_.\-/]+\.[a-zA-Z0-9]+)`?$",
+                line_stripped,
+            )
+
         if file_match:
-            # Flush existing block if in replace state
-            if state == 'replace' and current_file and (search_lines or replace_lines):
-                blocks_by_file.setdefault(current_file, []).append({
-                    "search": "\n".join(search_lines),
-                    "replace": "\n".join(replace_lines)
-                })
-            current_file = file_match.group(1).strip().lstrip('/\\')
-            state = 'outside'
+            if state == "replace" and current_file and (search_lines or replace_lines):
+                blocks_by_file.setdefault(current_file, []).append(
+                    {"search": "\n".join(search_lines), "replace": "\n".join(replace_lines)}
+                )
+            raw_path = file_match.group(1).strip().lstrip("/\\")
+            current_file = raw_path
+            state = "outside"
             search_lines = []
             replace_lines = []
             i += 1
             continue
-            
-        if line_stripped.startswith('<<<<<<< SEARCH'):
-            if state == 'replace' and current_file and (search_lines or replace_lines):
-                blocks_by_file.setdefault(current_file, []).append({
-                    "search": "\n".join(search_lines),
-                    "replace": "\n".join(replace_lines)
-                })
-            state = 'search'
+
+        if line_stripped.startswith("<<<<<<< SEARCH"):
+            if current_file is None:
+                current_file = "unknown"
+            if state == "replace" and current_file and (search_lines or replace_lines):
+                blocks_by_file.setdefault(current_file, []).append(
+                    {"search": "\n".join(search_lines), "replace": "\n".join(replace_lines)}
+                )
+            state = "search"
             search_lines = []
             replace_lines = []
             i += 1
             continue
-            
-        if line_stripped.startswith('======='):
-            if state == 'search':
-                state = 'replace'
+
+        if line_stripped.startswith("======="):
+            if state == "search":
+                state = "replace"
             i += 1
             continue
-            
-        if line_stripped.startswith('>>>>>>> REPLACE'):
-            if state == 'replace' and current_file and (search_lines or replace_lines):
-                blocks_by_file.setdefault(current_file, []).append({
-                    "search": "\n".join(search_lines),
-                    "replace": "\n".join(replace_lines)
-                })
-            state = 'outside'
+
+        if line_stripped.startswith(">>>>>>> REPLACE"):
+            if state == "replace" and current_file and (search_lines or replace_lines):
+                blocks_by_file.setdefault(current_file, []).append(
+                    {"search": "\n".join(search_lines), "replace": "\n".join(replace_lines)}
+                )
+            state = "outside"
             search_lines = []
             replace_lines = []
             i += 1
             continue
-            
-        # Accumulate code lines
-        if state == 'search':
+
+        if state == "search":
             search_lines.append(line)
-        elif state == 'replace':
+        elif state == "replace":
             replace_lines.append(line)
-            
+
         i += 1
-        
-    # Flush any unclosed block at the end of parsing
-    if state == 'replace' and current_file and (search_lines or replace_lines):
-        blocks_by_file.setdefault(current_file, []).append({
-            "search": "\n".join(search_lines),
-            "replace": "\n".join(replace_lines)
-        })
-        
-    modified_files = []
-    errors = []
-    
+
+    # Flush any unclosed block
+    if state == "replace" and current_file and (search_lines or replace_lines):
+        blocks_by_file.setdefault(current_file, []).append(
+            {"search": "\n".join(search_lines), "replace": "\n".join(replace_lines)}
+        )
+
+    modified_files: list[str] = []
+    errors: list[str] = []
+
     for file_rel_path, blocks in blocks_by_file.items():
+        # ── FIX #15: Reject unknown blocks instead of walking the whole repo ──
         if file_rel_path == "unknown":
+            errors.append(
+                "Parser encountered blocks without a FILE: header (unknown). "
+                "Skipped to avoid modifying wrong files."
+            )
             continue
-            
-        full_path = os.path.join(repo_dir, file_rel_path)
+
+        # ── FIX #2: Containment check — reject path-traversal attempts ────
+        safe_full_path = _safe_resolve(repo_dir, file_rel_path)
+        if safe_full_path is None:
+            errors.append(
+                f"Rejected unsafe file path (possible path traversal): {file_rel_path}"
+            )
+            continue
+
+        full_path = safe_full_path
+
         if not os.path.exists(full_path):
             is_creation = any(b["search"].strip() == "" for b in blocks)
             if is_creation:
                 os.makedirs(os.path.dirname(full_path), exist_ok=True)
-                with open(full_path, 'w', encoding='utf-8') as f:
+                with open(full_path, "w", encoding="utf-8") as f:
                     f.write("")
             else:
-                found = False
+                # FIX #13: Only use basename fallback when there is exactly
+                # ONE unambiguous match; warn and skip if multiple exist.
+                basename = os.path.basename(file_rel_path)
+                matches = []
                 for root, _, files in os.walk(repo_dir):
-                    for file in files:
-                        if file == os.path.basename(file_rel_path):
-                            possible_path = os.path.join(root, file)
-                            possible_rel = os.path.relpath(possible_path, repo_dir)
-                            if not any(part in possible_rel.split(os.sep) for part in ('.git', 'node_modules', 'venv', '__pycache__', 'dist', 'build')):
-                                full_path = possible_path
-                                file_rel_path = possible_rel
-                                found = True
-                                break
-                    if found:
-                        break
-                if not found:
+                    for fname in files:
+                        if fname == basename:
+                            candidate = os.path.join(root, fname)
+                            rel = os.path.relpath(candidate, repo_dir)
+                            excluded = (".git", "node_modules", "venv", "__pycache__", "dist", "build")
+                            if not any(part in rel.split(os.sep) for part in excluded):
+                                matches.append(candidate)
+
+                if len(matches) == 1:
+                    full_path = matches[0]
+                    file_rel_path = os.path.relpath(full_path, repo_dir)
+                elif len(matches) > 1:
+                    errors.append(
+                        f"Ambiguous file path '{file_rel_path}' — {len(matches)} files share "
+                        f"that basename. Skipped to avoid modifying the wrong file."
+                    )
+                    continue
+                else:
                     errors.append(f"File not found in repository: {file_rel_path}")
                     continue
-                
+
         try:
-            with open(full_path, 'r', encoding='utf-8', errors='ignore') as f:
+            with open(full_path, "r", encoding="utf-8", errors="ignore") as f:
                 content = f.read()
-                
+
             new_content = content
             for block in blocks:
                 search_str = block["search"]
                 replace_str = block["replace"]
-                
-                # Check for exact match
+
+                # 1. Exact match
                 if search_str in new_content:
                     new_content = new_content.replace(search_str, replace_str, 1)
+                    continue
+
+                # 2. Line-ending-normalised match
+                search_lf = search_str.replace("\r\n", "\n")
+                content_lf = new_content.replace("\r\n", "\n")
+                if search_lf in content_lf:
+                    new_content = content_lf.replace(
+                        search_lf, replace_str.replace("\r\n", "\n"), 1
+                    )
+                    continue
+
+                # 3. Strip-normalised match
+                search_strip = search_str.strip()
+                if search_strip and search_strip in new_content:
+                    new_content = new_content.replace(search_strip, replace_str, 1)
+                    continue
+
+                search_lf_strip = search_lf.strip()
+                if search_lf_strip and search_lf_strip in content_lf:
+                    new_content = content_lf.replace(
+                        search_lf_strip, replace_str.replace("\r\n", "\n"), 1
+                    )
+                    continue
+
+                # 4. FIX #14: Fuzzy match — only for sufficiently long blocks
+                fuzzy_res = fuzzy_replace(new_content, search_str, replace_str)
+                if fuzzy_res is not None:
+                    new_content = fuzzy_res
                 else:
-                    # Let's try line-ending normalized match
-                    search_norm = search_str.replace('\r\n', '\n')
-                    content_norm = new_content.replace('\r\n', '\n')
-                    
-                    if search_norm in content_norm:
-                        replace_norm = replace_str.replace('\r\n', '\n')
-                        content_norm = content_norm.replace(search_norm, replace_norm, 1)
-                        new_content = content_norm
-                    else:
-                        search_strip = search_str.strip()
-                        if search_strip in new_content:
-                            new_content = new_content.replace(search_strip, replace_str, 1)
-                        else:
-                            search_norm_strip = search_norm.strip()
-                            content_norm = new_content.replace('\r\n', '\n')
-                            if search_norm_strip in content_norm:
-                                new_content = content_norm.replace(search_norm_strip, replace_str.replace('\r\n', '\n'), 1)
-                            else:
-                                # Fallback to whitespace-insensitive fuzzy match!
-                                fuzzy_res = fuzzy_replace(new_content, search_str, replace_str)
-                                if fuzzy_res is not None:
-                                    new_content = fuzzy_res
-                                else:
-                                    errors.append(f"Could not locate the search block in {file_rel_path}. Block content:\n{search_str}")
-                                
+                    errors.append(
+                        f"Could not locate the search block in {file_rel_path}.\n"
+                        f"Block (first 200 chars): {search_str[:200]}"
+                    )
+
             if new_content != content:
-                with open(full_path, 'w', encoding='utf-8', newline='') as f:
+                with open(full_path, "w", encoding="utf-8", newline="") as f:
                     f.write(new_content)
                 modified_files.append(file_rel_path)
-                
+
         except Exception as e:
-            errors.append(f"Failed to modify {file_rel_path}: {str(e)}")
-            
-    # Try resolving unknown blocks
-    if "unknown" in blocks_by_file and blocks_by_file["unknown"]:
-        unknown_blocks = blocks_by_file["unknown"]
-        for root, _, files in os.walk(repo_dir):
-            for file in files:
-                full_path = os.path.join(root, file)
-                file_rel = os.path.relpath(full_path, repo_dir)
-                if any(part in file_rel.split(os.sep) for part in ('.git', 'node_modules', 'venv', '__pycache__', 'dist', 'build')):
-                    continue
-                try:
-                    with open(full_path, 'r', encoding='utf-8', errors='ignore') as f:
-                        content = f.read()
-                    new_content = content
-                    matched_any = False
-                    for block in unknown_blocks:
-                        search_str = block["search"]
-                        replace_str = block["replace"]
-                        search_norm = search_str.replace('\r\n', '\n')
-                        content_norm = new_content.replace('\r\n', '\n')
-                        
-                        if search_str in new_content:
-                            new_content = new_content.replace(search_str, replace_str, 1)
-                            matched_any = True
-                        elif search_norm in content_norm:
-                            new_content = content_norm.replace(search_norm, replace_str.replace('\r\n', '\n'), 1)
-                            matched_any = True
-                            
-                    if matched_any and new_content != content:
-                        with open(full_path, 'w', encoding='utf-8', newline='') as f:
-                            f.write(new_content)
-                        if file_rel not in modified_files:
-                            modified_files.append(file_rel)
-                except Exception:
-                    pass
-                    
-    return {
-        "modified_files": modified_files,
-        "errors": errors
-    }
+            errors.append(f"Failed to modify {file_rel_path}: {e}")
+
+    return {"modified_files": modified_files, "errors": errors}

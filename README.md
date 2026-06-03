@@ -95,9 +95,12 @@ Gitbo/
 
 1.  Start the FastAPI backend server:
     ```bash
-    .venv\Scripts\python -m uvicorn backend.main:app --port 8000
+    python -m uvicorn backend.main:app --port 8000
     ```
 2.  Open your browser and navigate to:
     [http://localhost:8000](http://localhost:8000)
 
 3.  Provide the GitHub repo URL, the issue description, and your GitHub PAT to run the agentic pipeline and see the visual output in real-time!
+
+> [!NOTE]
+> **CORS Security:** By default, the API restricts CORS to `http://localhost:8000` and `http://127.0.0.1:8000`. To run the frontend on a different domain, set the `ALLOWED_ORIGINS` environment variable (e.g. `ALLOWED_ORIGINS=https://yourapp.example.com`).

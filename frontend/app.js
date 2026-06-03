@@ -106,20 +106,29 @@ document.addEventListener("DOMContentLoaded", () => {
         try {
             const response = await fetch("/api/analyze", {
                 method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({
-                    repo_url,
-                    github_token,
-                    issue_description
-                })
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ repo_url, github_token, issue_description })
             });
-            
-            const data = await response.json();
-            
+
+            // FIX #20: Always check response.ok before attempting JSON parse.
+            // FastAPI error payloads use { "detail": "..." } which the old
+            // code could silently miss.
+            let data;
+            const contentType = response.headers.get("content-type") || "";
+            if (contentType.includes("application/json")) {
+                data = await response.json();
+            } else {
+                const text = await response.text();
+                throw new Error(`Server error ${response.status}: ${text.slice(0, 300)}`);
+            }
+
             if (!response.ok) {
-                throw new Error(data.detail || "Pipeline failed during backend execution.");
+                // Handle FastAPI validation errors (422) which have a list of details
+                if (Array.isArray(data.detail)) {
+                    const msgs = data.detail.map(d => d.msg || JSON.stringify(d)).join("; ");
+                    throw new Error(msgs);
+                }
+                throw new Error(data.detail || `Request failed with status ${response.status}`);
             }
             
             // Check for run errors in state
@@ -166,18 +175,35 @@ document.addEventListener("DOMContentLoaded", () => {
                 showCardContent(cardCode, ".code-snippets-container");
                 const snippetsEl = document.getElementById("code-snippets");
                 snippetsEl.innerHTML = "";
-                
+
                 data.retrieved_context.forEach(chunk => {
+                    // FIX #19: Build DOM nodes with textContent instead of
+                    // interpolating into innerHTML.  A malicious repository
+                    // filename or backend response could otherwise inject HTML/JS.
                     const snippetDiv = document.createElement("div");
                     snippetDiv.className = "code-snippet";
-                    
-                    snippetDiv.innerHTML = `
-                        <div class="snippet-file">
-                            <span>${chunk.file_path}</span>
-                            <span class="snippet-lines">Lines ${chunk.start_line}-${chunk.end_line}</span>
-                        </div>
-                        <pre><code>${escapeHTML(chunk.content)}</code></pre>
-                    `;
+
+                    const fileBar = document.createElement("div");
+                    fileBar.className = "snippet-file";
+
+                    const pathSpan = document.createElement("span");
+                    pathSpan.textContent = chunk.file_path;          // safe: textContent
+
+                    const linesSpan = document.createElement("span");
+                    linesSpan.className = "snippet-lines";
+                    linesSpan.textContent =                           // safe: textContent
+                        `Lines ${Number(chunk.start_line)}-${Number(chunk.end_line)}`;
+
+                    fileBar.appendChild(pathSpan);
+                    fileBar.appendChild(linesSpan);
+
+                    const pre  = document.createElement("pre");
+                    const code = document.createElement("code");
+                    code.textContent = chunk.content;                 // safe: textContent
+                    pre.appendChild(code);
+
+                    snippetDiv.appendChild(fileBar);
+                    snippetDiv.appendChild(pre);
                     snippetsEl.appendChild(snippetDiv);
                 });
             }
