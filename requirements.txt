@@ -1,0 +1,11 @@
+fastapi
+uvicorn
+langgraph
+langchain-core
+chromadb
+sentence-transformers
+GitPython
+PyGithub
+groq
+python-dotenv
+pydantic

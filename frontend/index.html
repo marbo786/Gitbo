@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Gitbo is an open-source AI agentic developer that automates repository onboarding by analyzing issues, crawling codebases, and generating verified pull requests.">
+    <title>Gitbo - Open-Source AI Agentic Developer</title>
+    <!-- Modern typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar Panel (Left, 30% Width) -->
+        <aside class="sidebar glass">
+            <div class="brand">
+                <svg class="logo-icon logo-svg" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/>
+                </svg>
+                <div class="brand-text">
+                    <h1>CodeOnboard</h1>
+                    <p class="subtitle">Gitbo AI Developer</p>
+                </div>
+            </div>
+            
+            <form id="analyze-form">
+                <div class="form-group">
+                    <label for="repo_url">GitHub Repository URL</label>
+                    <input type="url" id="repo_url" placeholder="https://github.com/owner/repo" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="github_token">Personal Access Token (PAT)</label>
+                    <input type="password" id="github_token" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx" required>
+                    <span class="tip">Requires 'repo' scope to clone and open PRs.</span>
+                </div>
+                
+                <div class="form-group">
+                    <label for="issue_description">GitHub Issue Description</label>
+                    <textarea id="issue_description" placeholder="Paste the issue description, stack trace, or bug description here..." required></textarea>
+                </div>
+                
+                <button type="submit" id="submit-btn" class="btn btn-primary">
+                    <span class="btn-text">Analyze & Generate PR</span>
+                    <span class="btn-loader hidden">
+                        <div class="spinner"></div>
+                        Running Pipeline...
+                    </span>
+                </button>
+            </form>
+
+            <div class="pipeline-status hidden" id="pipeline-status">
+                <h3>Pipeline Execution States</h3>
+                <ul class="steps-progress">
+                    <li id="step-1" class="step">
+                        <span class="step-dot"></span>
+                        <span class="step-label">1. Issue Understanding</span>
+                    </li>
+                    <li id="step-2" class="step">
+                        <span class="step-dot"></span>
+                        <span class="step-label">2. Codebase Search</span>
+                    </li>
+                    <li id="step-3" class="step">
+                        <span class="step-dot"></span>
+                        <span class="step-label">3. Solution Architect</span>
+                    </li>
+                    <li id="step-4" class="step">
+                        <span class="step-dot"></span>
+                        <span class="step-label">4. PR Creator & Diff</span>
+                    </li>
+                </ul>
+            </div>
+        </aside>
+
+        <!-- Main Content Workspace Panel (Right, 70% Width) -->
+        <main class="main-content">
+            <!-- Status/Success Banner -->
+            <div id="pr-banner" class="pr-success-banner glass hidden">
+                <div class="banner-content">
+                    <span class="celebrate-badge">🎉 PR Successfully Opened!</span>
+                    <h2 id="banner-title">Fix branch pushed & pull request opened</h2>
+                    <a id="pr-link" href="#" target="_blank" class="btn btn-success">View Pull Request on GitHub</a>
+                </div>
+                <div class="banner-glow"></div>
+            </div>
+
+            <!-- Error Banner -->
+            <div id="error-banner" class="error-banner glass hidden">
+                <div class="banner-content">
+                    <span class="error-badge">⚠️ Pipeline Warning/Error</span>
+                    <ul id="error-list"></ul>
+                </div>
+            </div>
+
+            <!-- Dashboard Grid -->
+            <div class="dashboard-grid">
+                <!-- Card 1: Issue Analysis -->
+                <section class="card glass" id="card-issue-analysis">
+                    <div class="card-header">
+                        <svg class="card-svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M12 20h9"/>
+                            <path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/>
+                        </svg>
+                        <h2>Issue Analysis</h2>
+                    </div>
+                    <div class="card-body">
+                        <div class="placeholder-text">Submit the repository and issue details on the left to start analysis.</div>
+                        <div class="analysis-results hidden">
+                            <div class="metric-row">
+                                <div class="metric">
+                                    <span class="metric-label">Category</span>
+                                    <span class="metric-value badge" id="analysis-category">-</span>
+                                </div>
+                                <div class="metric">
+                                    <span class="metric-label">Difficulty</span>
+                                    <span class="metric-value badge" id="analysis-difficulty">-</span>
+                                </div>
+                            </div>
+                            <div class="problem-summary">
+                                <h3>Extracted Core Bug</h3>
+                                <p id="analysis-problem">-</p>
+                            </div>
+                            <div class="skills-tags">
+                                <h3>Target Skills & Technologies</h3>
+                                <div class="tags-container" id="analysis-skills"></div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Card 2: Relevant Code Files -->
+                <section class="card glass" id="card-relevant-code">
+                    <div class="card-header">
+                        <svg class="card-svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="m18 16 4-4-4-4"/>
+                            <path d="m6 8-4 4 4 4"/>
+                            <path d="m14.5 4-5 16"/>
+                        </svg>
+                        <h2>Relevant Code Snippets</h2>
+                    </div>
+                    <div class="card-body">
+                        <div class="placeholder-text">Code files containing potential bugs will appear here after codebase scanning.</div>
+                        <div class="code-snippets-container hidden" id="code-snippets"></div>
+                    </div>
+                </section>
+
+                <!-- Card 3: Implementation Strategy -->
+                <section class="card glass" id="card-implementation">
+                    <div class="card-header">
+                        <svg class="card-svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96-.44 2.5 2.5 0 0 1 0-3.12 3.01 3.01 0 0 1 0-3.88 2.5 2.5 0 0 1 0-3.12A2.5 2.5 0 0 1 9.5 2Z"/>
+                            <path d="M14.5 2A2.5 2.5 0 0 0 12 4.5v15a2.5 2.5 0 0 0 4.96-.44 2.5 2.5 0 0 0 0-3.12 3.01 3.01 0 0 0 0-3.88 2.5 2.5 0 0 0 0-3.12A2.5 2.5 0 0 0 14.5 2Z"/>
+                        </svg>
+                        <h2>Implementation Strategy</h2>
+                    </div>
+                    <div class="card-body">
+                        <div class="placeholder-text">Architected changes and root cause analysis will be displayed here.</div>
+                        <div class="implementation-results hidden">
+                            <div class="architect-section">
+                                <h3>Root Cause Analysis</h3>
+                                <div class="plan-block" id="impl-root-cause"></div>
+                            </div>
+                            <div class="architect-section">
+                                <h3>Recommended Changes</h3>
+                                <div class="plan-block" id="impl-recommended"></div>
+                            </div>
+                            <div class="architect-section">
+                                <h3>Estimated Effort</h3>
+                                <span class="badge badge-accent" id="impl-effort">-</span>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Card 4: Live Git Diff -->
+                <section class="card glass full-width" id="card-git-diff">
+                    <div class="card-header">
+                        <svg class="card-svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <rect width="20" height="16" x="2" y="4" rx="2"/>
+                            <path d="m10 10-2 2 2 2"/>
+                            <path d="m14 14 2-2-2-2"/>
+                        </svg>
+                        <h2>Live Git Diff</h2>
+                    </div>
+                    <div class="card-body no-padding">
+                        <div class="placeholder-text padded">The generated git diff showing modifications will be shown here.</div>
+                        <div class="terminal-container hidden" id="diff-container">
+                            <div class="terminal-header">
+                                <span class="terminal-dot red"></span>
+                                <span class="terminal-dot yellow"></span>
+                                <span class="terminal-dot green"></span>
+                                <span class="terminal-title">git diff</span>
+                            </div>
+                            <pre class="terminal-body"><code id="git-diff-content"></code></pre>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+    <script src="app.js"></script>
+</body>
+</html>
