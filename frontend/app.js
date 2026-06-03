@@ -164,7 +164,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 const skills = data.issue_analysis.skills || [];
                 skills.forEach(skill => {
                     const tag = document.createElement("span");
-                    tag.className = "tag";
+                    tag.className = "skill-tag";
                     tag.textContent = skill;
                     skillsContainer.appendChild(tag);
                 });
