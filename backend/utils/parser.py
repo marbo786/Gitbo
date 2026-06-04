@@ -109,7 +109,7 @@ def apply_search_replace(repo_dir: str, llm_output: str) -> dict:
             i += 1
             continue
 
-        if line_stripped.startswith("<<<<<<< SEARCH"):
+        if line_stripped.startswith("<<<<<<<"):
             if current_file is None:
                 current_file = "unknown"
             if state == "replace" and current_file and (search_lines or replace_lines):
@@ -128,7 +128,7 @@ def apply_search_replace(repo_dir: str, llm_output: str) -> dict:
             i += 1
             continue
 
-        if line_stripped.startswith(">>>>>>> REPLACE"):
+        if line_stripped.startswith(">>>>>>>"):
             if state == "replace" and current_file and (search_lines or replace_lines):
                 blocks_by_file.setdefault(current_file, []).append(
                     {"search": "\n".join(search_lines), "replace": "\n".join(replace_lines)}

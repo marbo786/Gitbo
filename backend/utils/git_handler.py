@@ -122,7 +122,15 @@ def push_branch(repo_dir: str, repo_url: str, token: str, branch_name: str):
     origin = repo.remote(name="origin")
     origin.set_url(auth_url)
     try:
-        origin.push(refspec=f"HEAD:refs/heads/{branch_name}", force=True)
+        try:
+            origin.push(refspec=f"HEAD:refs/heads/{branch_name}", force=True)
+        except git.exc.GitCommandError as e:
+            if "403" in str(e):
+                raise ValueError(
+                    "GitHub push failed with 403 Forbidden. Your token likely lacks push access to this repository. "
+                    "Make sure you own the repo, or fork it first, and check that your GitHub token has 'repo' permissions."
+                ) from e
+            raise e
     finally:
         # Restore non-auth URL regardless of push success/failure
         try:
