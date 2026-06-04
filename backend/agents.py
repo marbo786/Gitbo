@@ -457,16 +457,33 @@ def pr_creator_node(state: AgentState) -> dict:
             f"Target Files:\n{files_context}"
         )
 
-        llm_edits = call_llm(system_prompt, user_prompt)
-        print("[Agent 4] Applying SEARCH/REPLACE blocks...")
+        max_retries = 2
+        result = {"modified_files": [], "errors": []}
+        
+        for attempt in range(max_retries + 1):
+            llm_edits = call_llm(system_prompt, user_prompt)
+            print(f"[Agent 4] Applying SEARCH/REPLACE blocks (Attempt {attempt + 1})...")
 
-        result = apply_search_replace(temp_dir, llm_edits)
-        if result["errors"]:
-            print(f"[Agent 4] Search/replace warnings: {result['errors']}")
-            errors.extend(result["errors"])
+            result = apply_search_replace(temp_dir, llm_edits)
+            
+            if result["modified_files"]:
+                if result["errors"]:
+                    print(f"[Agent 4] Search/replace warnings: {result['errors']}")
+                    errors.extend(result["errors"])
+                break  # Success!
+            else:
+                print(f"[Agent 4] Attempt {attempt + 1} failed. Errors: {result['errors']}")
+                if attempt < max_retries:
+                    # Append feedback for the next attempt
+                    user_prompt += (
+                        f"\n\n--- PREVIOUS ATTEMPT FAILED ---\n"
+                        f"Your previous output resulted in NO modified files.\n"
+                        f"Parser errors:\n{json.dumps(result['errors'], indent=2)}\n"
+                        "Check your SEARCH blocks for exact matches and ensure the FILE: header is correct. Try again."
+                    )
 
         if not result["modified_files"]:
-            raise ValueError(f"No files were modified. Parser errors: {result['errors']}")
+            raise ValueError(f"No files were successfully modified after {max_retries + 1} attempts. Errors: {result['errors']}")
 
         # FIX #11: Branch name always has a safe slug + short timestamp suffix
         prob_summary = state["issue_analysis"].get("problem", "code-fix")

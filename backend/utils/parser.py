@@ -86,8 +86,8 @@ def apply_search_replace(repo_dir: str, llm_output: str) -> dict:
         line_stripped = line.strip()
 
         # ── File path markers ──────────────────────────────────────────────
-        file_match = re.match(
-            r"^(?:FILE|File|filepath|Filepath|Path|path|Target File|Target file)\s*:\s*`?([^`\s]+)`?",
+        file_match = re.search(
+            r"(?:FILE|File|filepath|Filepath|Path|path|Target File|Target file)\s*:\s*`?\*?\*?([^`\s\*]+)`?\*?\*?",
             line_stripped,
         )
         if not file_match:
