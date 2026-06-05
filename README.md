@@ -53,7 +53,7 @@ Gitbo orchestrates a deterministic 4-agent pipeline via **LangGraph**:
 ║             │                                                        ║
 ║             ▼                                                        ║
 ║  ┌─────────────────────┐                                             ║
-║  │  2. Semantic Embed  │  ← AST/brace chunking → sentence-          ║
+║  │  2. Semantic Embed  │  ← AST/brace chunking → sentence-           ║
 ║  │     & Search Agent  │    transformers → ChromaDB vector search    ║
 ║  └──────────┬──────────┘                                             ║
 ║             │                                                        ║
@@ -65,7 +65,7 @@ Gitbo orchestrates a deterministic 4-agent pipeline via **LangGraph**:
 ║             │                                                        ║
 ║             ▼                                                        ║
 ║  ┌─────────────────────┐                                             ║
-║  │  4. PR Creator &    │  ← Applies SEARCH/REPLACE patches,         ║
+║  │  4. PR Creator &    │  ← Applies SEARCH/REPLACE patches,          ║
 ║  │     Editor Agent    │    commits to branch, opens GitHub PR       ║
 ║  └──────────┬──────────┘                                             ║
 ║             │                                                        ║
