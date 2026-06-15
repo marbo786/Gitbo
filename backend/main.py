@@ -96,7 +96,7 @@ except Exception:
 
 # ── API endpoints ─────────────────────────────────────────────────────────────
 
-@app.get("/health")
+@app.get("/api/health")
 async def health():
     """Simple health check — also reports graph compilation status."""
     return {
