@@ -13,7 +13,6 @@
 
 *Drop a GitHub issue. Get a Pull Request. Done.*
 
-[Overview](#-overview) · [Architecture](#️-architecture) · [Tech Stack](#️-tech-stack) · [Project Structure](#-project-structure) · [Getting Started](#-getting-started) · [Usage](#-usage)
 
 </div>
 
@@ -120,57 +119,6 @@ Gitbo/
 ├── requirements.txt         # Pinned Python dependencies
 └── README.md
 ```
-
----
-
-## 🚀 Getting Started
-
-### Prerequisites
-
-- **Python 3.8+**
-- **Git** — installed and on your PATH
-- **Groq API Key** — free at [console.groq.com](https://console.groq.com)
-- **GitHub Personal Access Token (PAT)** — needs `repo` scope (or fine-grained `Contents` + `Pull Requests` write access)
-
-### Installation
-
-```bash
-# 1. Clone the repository
-git clone https://github.com/marbo786/Gitbo.git
-cd Gitbo
-
-# 2. Create and activate a virtual environment
-python -m venv .venv
-
-# Windows
-.venv\Scripts\activate
-
-# macOS / Linux
-source .venv/bin/activate
-
-# 3. Install pinned dependencies
-pip install -r requirements.txt
-
-# 4. Configure environment variables
-cp .env.example .env   # or create manually
-```
-
-Add the following to your `.env`:
-
-```env
-GROQ_API_KEY=gsk_your_groq_api_key_here
-```
-
-> **CORS Note:** By default, the API allows only `http://localhost:8000` and `http://127.0.0.1:8000`. To expose the frontend on a different origin, set `ALLOWED_ORIGINS=https://yourapp.example.com` in `.env`.
-
-### Running Locally
-
-```bash
-# Start the FastAPI backend
-python -m uvicorn backend.main:app --port 8000
-```
-
-Navigate to **[http://localhost:8000](http://localhost:8000)** in your browser.
 
 ---
 
